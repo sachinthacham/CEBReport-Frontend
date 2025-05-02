@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { fetchProvinceData } from "../services/BackendServices";
+
 import {
   PieChart,
   Pie,
@@ -6,6 +9,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+
+type Province = {
+  id: number;
+  provinceName: string;
+  divisionId: number;
+  division: {
+    id: number;
+    divisionName: string;
+  };
+};
 
 const pieData = [
   { name: "Frontend", value: 400 },
@@ -17,6 +30,16 @@ const pieData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const PieChartComponent = () => {
+  const [provinces, setProvinces] = useState();
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      const provinces = await fetchProvinceData();
+      setProvinces(provinces);
+    };
+    fetchProvinces();
+  }, []);
+
   return (
     <div className="w-full h-80 p-4 shadow-md">
       <ResponsiveContainer width="100%" height="100%">
