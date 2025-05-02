@@ -4,6 +4,7 @@ import PieChartComponent from "../components/PieChart";
 import RightSideBar from "../components/RightSideBar";
 import Sidebar from "../components/Sidebar";
 import UserNavBar from "../components/UserNavBar";
+import DuelChart from "../components/DuelChart";
 
 const Reporting = () => {
   return (
@@ -21,7 +22,8 @@ const Reporting = () => {
           <h2 className="text-xl font-bold mb-4">Distribution 1</h2>
           <div className="flex gap-8">
             <PieChartComponent />
-            <BarChartComponent />
+            {/*<BarChartComponent /> */}
+            <DuelChart />
           </div>
         </div>
         {/* right side bar */}
