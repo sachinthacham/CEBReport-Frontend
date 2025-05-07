@@ -8,10 +8,18 @@ import Project from "../assets/6161625.jpg";
 import Audit from "../assets/audit.jpg";
 import Billing from "../assets/billing.jpg";
 import Transmission from "../assets/transmission.jpg";
+import { useNavigate } from "react-router-dom";
 
 const LandingPageCards = () => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/report");
+  };
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
+    <div
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4"
+      onClick={handleClick}
+    >
       <LandingPageCard topic="Distribution 1" image={Distribution1} />
       <LandingPageCard topic="Distribution 2" image={Dustribution2} />
       <LandingPageCard topic="Dustribution 3" image={Distribution3} />
