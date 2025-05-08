@@ -77,8 +77,13 @@
 
 import CEBlogo from "../assets/CEB logo.png";
 import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate("/landing");
+  };
   return (
     <nav className="h-16 bg-white shadow-md flex items-center justify-between px-2 relative">
       <div className="flex justify-between items-center">
@@ -89,11 +94,11 @@ const Navbar = () => {
         <div className="text-xl font-bold text-[#800000]">CEB Reporting</div>
       </div>
       <div className="">
-        <div className="w-full bg-white  rounded-2xl text-[#800000] cursor-pointer flex justify-between p-3 gap-4 items-center shadow-lg">
+        <div className="flex items-center gap-2 text-white bg-[#800000] hover:bg-[#a00000] px-4 py-2 rounded-md transition-colors cursor-pointer">
           <div>
             <FaArrowLeft />
           </div>
-          <div> Back To Dashboard</div>
+          <div onClick={handleNavigate}> Back To Dashboard</div>
         </div>
       </div>
     </nav>

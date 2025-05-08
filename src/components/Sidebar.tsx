@@ -65,7 +65,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-full bg-gray-100 min-h-screen p-4">
+    <div className="w-full bg-white min-h-screen p-4 text-[#800000] font-semibold">
       {topics.map((topic) => (
         <div key={topic.id} className="mb-2">
           <div
@@ -91,7 +91,10 @@ const Sidebar = () => {
           >
             <div className="p-2">
               {topic.subtopics.map((subtopic, index) => (
-                <div key={index} className="p-2 hover:bg-gray-200 rounded">
+                <div
+                  key={index}
+                  className="p-2 px-4 hover:bg-gray-200 rounded font-normal text-black"
+                >
                   {subtopic}
                 </div>
               ))}
