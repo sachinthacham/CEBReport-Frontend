@@ -2,12 +2,13 @@ import Navbar from "../components/Navbar";
 import UserNavBar from "../components/UserNavBar";
 //import LandingPageSideBar from "../components/LandingPageSideBar";
 import LandingPageCards from "../components/LandingPageCards";
+import NavbarLanding from "../components/NavbarLanding";
 
 const LandingPage = () => {
   return (
     <div className="min-h-screen">
       <UserNavBar />
-      <Navbar />
+      <NavbarLanding />
       <div className="flex">
         {/* Sidebar */}
         {/* <div className="w-1/7">
