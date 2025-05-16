@@ -1,10 +1,18 @@
 import { FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const UserNavBar = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/user");
+  };
   return (
     <div className="w-full py-2 flex justify-end bg-[#800000] px-5 gap-3">
       <FaUser size={24} color="white" />
-      <div className="text-white text-md">Sachintha Chamindu</div>
+      <div className="text-white text-md cursor-pointer" onClick={handleClick}>
+        Sachintha Chamindu
+      </div>
     </div>
   );
 };
