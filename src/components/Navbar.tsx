@@ -82,7 +82,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate("/landing");
+    navigate("/");
   };
   return (
     <nav className="h-16 bg-white shadow-md flex items-center justify-between px-2 relative">
