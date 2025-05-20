@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import UserNavBar from "../components/UserNavBar";
+import Navbar from "../components/layout/Navbar";
+import Sidebar from "../components/layout/Sidebar";
+import UserNavBar from "../components/layout/UserNavBar";
 import Billing_payment from "../pages/Billing_payment";
 
 const Billing_payment_layout = () => {

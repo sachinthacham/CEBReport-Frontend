@@ -1,5 +1,5 @@
 import { useUser } from "../contexts/UserContext";
-import Detail from "../components/UserDetailListItem";
+import Detail from "../components/profile/UserDetailListItem";
 import ProfileImage from "../assets/profile_image3.jpg";
 
 const UserDetails = () => {

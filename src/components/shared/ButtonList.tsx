@@ -1,5 +1,5 @@
 import Button from "./Button";
-import { fetchProvinceData } from "../services/BackendServices";
+import { fetchProvinceData } from "../../services/BackendServices";
 import { useEffect, useState } from "react";
 
 type Provinces = {

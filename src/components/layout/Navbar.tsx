@@ -1,11 +1,11 @@
-import CEBlogo from "../assets/CEB logo.png";
+import CEBlogo from "../../assets/CEB logo.png";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate("/");
+    navigate("/report");
   };
   return (
     <nav className="h-16 bg-white shadow-md flex items-center justify-between px-2 relative bg-fixed">

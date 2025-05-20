@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import UserNavBar from "../components/UserNavBar";
-import AreaBarChart from "../components/AreaBarChart";
-import DuelChart from "../components/DuelChart";
-import ButtonList from "../components/ButtonList";
+import Navbar from "../components/layout/Navbar";
+import Sidebar from "../components/layout/Sidebar";
+import UserNavBar from "../components/layout/UserNavBar";
+import AreaBarChart from "../components/reporting/AreaBarChart";
+import DuelChart from "../components/reporting/DuelChart";
+import ButtonList from "../components/shared/ButtonList";
 
 const Reporting = () => {
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);

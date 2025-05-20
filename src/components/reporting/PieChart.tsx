@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCustomerCountByProvince } from "../services/BackendServices";
+import { fetchCustomerCountByProvince } from "../../services/BackendServices";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 

@@ -4,17 +4,48 @@ import { toast } from "react-toastify";
 import { useUser } from "../../contexts/UserContext";
 import { useLogged } from "../../contexts/UserLoggedStateContext";
 import { postJSON } from "../../helpers/LoginHelper";
-import InputField from "../InputField";
+import InputField from "../shared/InputField";
 import ceb from "../../assets/CEB logo.png";
 
 const LoginCard = () => {
-  const { setLogged, logged } = useLogged();
-  const { setUser, user } = useUser();
+  const { setLogged } = useLogged();
+  const { setUser } = useUser();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // const handleSubmit = async (e: any) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const IsLogged = await postJSON("/CBRSAPI/CBRSUPERUserLogin", {
+  //       Username: username,
+  //       Password: password,
+  //     });
+  //     setLogged(IsLogged);
+
+  //     if (logged?.Logged) {
+  //       toast.success("Login successful!", { autoClose: 2000 });
+  //       navigate("/report");
+  //       const userData = await postJSON("/CBRSAPI/CBRSEPFNOLogin", {
+  //         Username: username,
+  //         Password: password,
+  //       });
+  //       setUser(userData);
+  //       if (user.Logged) {
+  //         console.log("User details have been fetched successfully");
+  //       } else {
+  //         console.log("User details cant be fetched");
+  //       }
+  //     } else {
+  //       toast.error("Invalid username or password");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during login:", error);
+  //     toast.error("Network or server error");
+  //   }
+  // };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -23,20 +54,24 @@ const LoginCard = () => {
         Username: username,
         Password: password,
       });
+
       setLogged(IsLogged);
 
-      if (logged.Logged) {
+      if (IsLogged?.Logged) {
         toast.success("Login successful!", { autoClose: 2000 });
         navigate("/report");
+
         const userData = await postJSON("/CBRSAPI/CBRSEPFNOLogin", {
           Username: username,
           Password: password,
         });
+
         setUser(userData);
-        if (user.Logged) {
+
+        if (userData?.Logged) {
           console.log("User details have been fetched successfully");
         } else {
-          console.log("User details cant be fetched");
+          console.log("User details can't be fetched");
         }
       } else {
         toast.error("Invalid username or password");
