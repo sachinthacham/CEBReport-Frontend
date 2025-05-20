@@ -1,12 +1,14 @@
-import BarChartComponent from "../components/BarChart";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
-import PieChartComponent from "../components/PieChart";
-import RightSideBar from "../components/RightSideBar";
 import Sidebar from "../components/Sidebar";
 import UserNavBar from "../components/UserNavBar";
+import AreaBarChart from "../components/AreaBarChart";
 import DuelChart from "../components/DuelChart";
+import ButtonList from "../components/ButtonList";
 
 const Reporting = () => {
+  const [selectedProvinceId, setSelectedProvinceId] = useState<number>(1);
+
   return (
     <div className="min-h-screen">
       <UserNavBar />
@@ -17,18 +19,16 @@ const Reporting = () => {
           <Sidebar />
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 p-4">
-          <h2 className="text-xl font-bold mb-4">Distribution 1</h2>
-          <div className="flex gap-8">
-            <PieChartComponent />
-            {/*<BarChartComponent /> */}
+        <div className="w-4/5 p-4">
+          <div className="flex gap-5 w-full">
+            {/* Bar Chart based on selected province */}
+            <AreaBarChart selectedProvinceId={selectedProvinceId} />
+            {/* Province Buttons */}
+            <ButtonList setSelectedProvinceId={setSelectedProvinceId} />
+          </div>
+          <div>
             <DuelChart />
           </div>
-        </div>
-        {/* right side bar */}
-        <div className="w-1/6">
-          <RightSideBar />
         </div>
       </div>
     </div>

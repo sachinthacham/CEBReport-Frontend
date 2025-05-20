@@ -5,4 +5,18 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/CBRSAPI": {
+        target: "http://10.128.1.126",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/CEBINFO_API_2025": {
+        target: "http://10.128.1.126",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
