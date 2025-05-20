@@ -1,6 +1,6 @@
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 
 const UserNavBar = () => {
   const navigate = useNavigate();

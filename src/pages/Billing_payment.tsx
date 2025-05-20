@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { postJSON } from "../helpers/LoginHelper";
-import BillingForm from "../components/Billing_Form";
-import BillingChart from "../components/Biling_Chart";
+import BillingForm from "../components/billing/Billing_Form";
+import BillingChart from "../components/billing/Biling_Chart";
 
 type Customer = {
   customerMasDetail: any;

@@ -6,61 +6,81 @@ import { BsFolder2Open } from "react-icons/bs";
 import { MdAssignmentTurnedIn } from "react-icons/md";
 import { FaFileUpload } from "react-icons/fa";
 import { GiSolarPower } from "react-icons/gi";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [openTopic, setOpenTopic] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const topics = [
     {
       id: 1,
       title: "Billing And Payments",
-      subtopics: [
-        "Financial Statements",
-        "Bill & Payment Inquries",
-        "Recievable Positions",
-      ],
       icon: <MdPayment />,
+      subtopics: [
+        { name: "Financial Statements", route: "/billing/financial" },
+        { name: "Bill & Payment Inquiries", route: "/billing" },
+        { name: "Receivable Positions", route: "/billing/receivables" },
+      ],
     },
     {
       id: 2,
       title: "Finance",
-      subtopics: ["Cash book", "PIV", "Financial Statements"],
       icon: <RiBankLine />,
+      subtopics: [
+        { name: "Cash Book", route: "/finance/cashbook" },
+        { name: "PIV", route: "/finance/piv" },
+        { name: "Financial Statements", route: "/finance/statements" },
+      ],
     },
     {
       id: 3,
       title: "Inventory",
-      subtopics: [
-        "FIFO",
-        "Material Master",
-        "Quentity On Hards",
-        "Issues And GRN",
-      ],
       icon: <FaBoxes />,
+      subtopics: [
+        { name: "FIFO", route: "/inventory/fifo" },
+        { name: "Material Master", route: "/inventory/material-master" },
+        { name: "Quantity On Hands", route: "/inventory/quantity" },
+        { name: "Issues And GRN", route: "/inventory/issues-grn" },
+      ],
     },
     {
       id: 4,
       title: "Projects",
-      subtopics: ["Application", "Estimation", "Jobs", "Progress"],
       icon: <BsFolder2Open />,
+      subtopics: [
+        { name: "Application", route: "/projects/application" },
+        { name: "Estimation", route: "/projects/estimation" },
+        { name: "Jobs", route: "/projects/jobs" },
+        { name: "Progress", route: "/projects/progress" },
+      ],
     },
     {
       id: 5,
       title: "Audit",
-      subtopics: ["UNT Submission", "Liss Submission"],
       icon: <MdAssignmentTurnedIn />,
+      subtopics: [
+        { name: "UNT Submission", route: "/audit/unt-submission" },
+        { name: "Liss Submission", route: "/audit/liss-submission" },
+      ],
     },
     {
       id: 6,
       title: "PUCSL Submission",
-      subtopics: ["UNT Submission", "Liss Submission"],
       icon: <FaFileUpload />,
+      subtopics: [
+        { name: "UNT Submission", route: "/pucsl/unt-submission" },
+        { name: "Liss Submission", route: "/pucsl/liss-submission" },
+      ],
     },
     {
       id: 7,
       title: "Solar/Procumer",
-      subtopics: ["Solar ", "procumer"],
       icon: <GiSolarPower />,
+      subtopics: [
+        { name: "Solar", route: "/solar/solar" },
+        { name: "Procumer", route: "/solar/procumer" },
+      ],
     },
   ];
 
@@ -69,7 +89,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-full bg-white min-h-screen p-4 text-[#800000] font-semibold">
+    <div className="w-full bg-white min-h-screen p-4 text-[#800000] font-semibold cursor-pointer">
       {topics.map((topic) => (
         <div key={topic.id} className="mb-2">
           <div
@@ -96,9 +116,10 @@ const Sidebar = () => {
               {topic.subtopics.map((subtopic, index) => (
                 <div
                   key={index}
+                  onClick={() => navigate(subtopic.route)}
                   className="p-2 px-4 hover:bg-gray-200 rounded font-normal text-black"
                 >
-                  {subtopic}
+                  {subtopic.name}
                 </div>
               ))}
             </div>

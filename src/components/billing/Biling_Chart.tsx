@@ -35,7 +35,7 @@ const BillingChart = ({ data }: Props) => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="units" fill="#8884d8" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="units" fill="#0077b6" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

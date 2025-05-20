@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BarChartComponent from "./BarChart";
-import { fetchCustomerCountByArea } from "../services/BackendServices";
+import { fetchCustomerCountByArea } from "../../services/BackendServices";
 
 type Area = {
   areaName: string;

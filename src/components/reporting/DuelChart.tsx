@@ -1,6 +1,6 @@
 import { useState } from "react";
-import HorizontalBarChartComponent from "../components/HorizontalBarChart";
-import PieChartComponent from "../components/PieChart";
+import HorizontalBarChartComponent from "../../components/reporting/HorizontalBarChart";
+import PieChartComponent from "../../components/reporting/PieChart";
 
 const DuelChart = () => {
   const [selectedOption, setSelectedOption] = useState<string>("area");
