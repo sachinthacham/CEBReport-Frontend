@@ -1,10 +1,11 @@
 import { useState } from "react";
-import ceb from "../assets/CEB logo.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUser } from "../../contexts/UserContext";
 import { useLogged } from "../../contexts/UserLoggedStateContext";
 import { postJSON } from "../../helpers/LoginHelper";
+import InputField from "../InputField";
+import ceb from "../../assets/CEB logo.png";
 
 const LoginCard = () => {
   const { setLogged, logged } = useLogged();
@@ -13,7 +14,6 @@ const LoginCard = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  //const [showPopUp, setShowPopUp] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ const LoginCard = () => {
       if (logged.Logged) {
         toast.success("Login successful!", { autoClose: 2000 });
         navigate("/report");
-        const userData = await postJSON("/CBRSAPI/CBRSUPERUserLogin", {
+        const userData = await postJSON("/CBRSAPI/CBRSEPFNOLogin", {
           Username: username,
           Password: password,
         });
@@ -57,26 +57,20 @@ const LoginCard = () => {
           Sign In With Credentials
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm text-gray-700 mb-1">UserName</label>
-            <input
-              value={username}
-              className="w-full px-3 py-2 border rounded text-sm shadow focus:outline-none focus:ring"
-              placeholder="UserName"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm text-gray-700 mb-1">Password</label>
-            <input
-              value={password}
-              type="password"
-              className="w-full px-3 py-2 border rounded text-sm shadow focus:outline-none focus:ring"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+          <InputField
+            label="Username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+          />
+          <InputField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
 
           <div className="flex items-center mb-4">
             <input

@@ -21,7 +21,7 @@ const ButtonList = ({ setSelectedProvinceId }: props) => {
     fetchProvinces();
   }, []);
   return (
-    <ul className="grid grid-cols-2 gap-2 col-span-5 bg-white p-5 rounded-md">
+    <ul className="grid grid-cols-2 gap-2 col-span-5 bg-white p-5 rounded-md w-full">
       {provinces.map((province) => (
         <li>
           <Button onClick={() => setSelectedProvinceId(province.id)}>
