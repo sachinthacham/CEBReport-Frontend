@@ -1,7 +1,6 @@
-import Navbar from "../components/Navbar";
 import UserNavBar from "../components/UserNavBar";
 //import LandingPageSideBar from "../components/LandingPageSideBar";
-import LandingPageCards from "../components/LandingPageCards";
+import LandingPageCards from "../components/landing/LandingPageCards";
 import NavbarLanding from "../components/NavbarLanding";
 
 const LandingPage = () => {

@@ -14,7 +14,11 @@ const Sidebar = () => {
     {
       id: 1,
       title: "Billing And Payments",
-      subtopics: ["Financial Statements", "Analysis", "Recievable Positions"],
+      subtopics: [
+        "Financial Statements",
+        "Bill & Payment Inquries",
+        "Recievable Positions",
+      ],
       icon: <MdPayment />,
     },
     {
@@ -48,7 +52,7 @@ const Sidebar = () => {
     },
     {
       id: 6,
-      title: "PUCSSL Submission",
+      title: "PUCSL Submission",
       subtopics: ["UNT Submission", "Liss Submission"],
       icon: <FaFileUpload />,
     },
@@ -81,7 +85,6 @@ const Sidebar = () => {
               <div>{openTopic === topic.id ? "−" : "+"}</div>
             </div>
           </div>
-
           <div
             className={`transition-all duration-500 ease-in-out overflow-hidden ${
               openTopic === topic.id
