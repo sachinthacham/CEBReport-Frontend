@@ -15,39 +15,9 @@ const LoginCard = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // const handleSubmit = async (e: any) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const IsLogged = await postJSON("/CBRSAPI/CBRSUPERUserLogin", {
-  //       Username: username,
-  //       Password: password,
-  //     });
-  //     setLogged(IsLogged);
-
-  //     if (logged?.Logged) {
-  //       toast.success("Login successful!", { autoClose: 2000 });
-  //       navigate("/report");
-  //       const userData = await postJSON("/CBRSAPI/CBRSEPFNOLogin", {
-  //         Username: username,
-  //         Password: password,
-  //       });
-  //       setUser(userData);
-  //       if (user.Logged) {
-  //         console.log("User details have been fetched successfully");
-  //       } else {
-  //         console.log("User details cant be fetched");
-  //       }
-  //     } else {
-  //       toast.error("Invalid username or password");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during login:", error);
-  //     toast.error("Network or server error");
-  //   }
-  // };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    localStorage.removeItem("userData");
 
     try {
       const IsLogged = await postJSON("/CBRSAPI/CBRSUPERUserLogin", {
@@ -84,7 +54,7 @@ const LoginCard = () => {
 
   return (
     <div>
-      <div className="bg-[#FFF066] shadow-lg rounded-lg p-6">
+      <div className="bg-[#fcf6bd] shadow-lg rounded-lg p-6">
         <div className="flex justify-center mb-4">
           <img src={ceb} alt="CEB Logo" className="w-40 h-20" />
         </div>
@@ -106,7 +76,6 @@ const LoginCard = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
           />
-
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -114,7 +83,6 @@ const LoginCard = () => {
             />
             <span className="ml-2 text-sm text-gray-600">Remember Me</span>
           </div>
-
           <button
             type="submit"
             className="w-full bg-[#7c0000] text-white py-2 rounded shadow hover:shadow-lg transition-all duration-150"
@@ -122,7 +90,6 @@ const LoginCard = () => {
             Sign In
           </button>
         </form>
-
         <div className="flex justify-between mt-6 text-sm text-gray-500"></div>
       </div>
     </div>
