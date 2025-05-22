@@ -54,7 +54,7 @@ const LoginCard = () => {
 
   return (
     <div>
-      <div className="bg-[#fcf6bd] shadow-lg rounded-lg p-6">
+      <div className="bg-[#ffffff] shadow-lg rounded-lg p-6">
         <div className="flex justify-center mb-4">
           <img src={ceb} alt="CEB Logo" className="w-40 h-20" />
         </div>
