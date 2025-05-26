@@ -27,15 +27,24 @@ type Props = {
 
 const BillingChart = ({ data }: Props) => {
   return (
-    <div className="w-full h-96">
+    <div className="w-full h-96 bg-[#f8f9fa]">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data}>
+        <BarChart
+          data={data}
+          barCategoryGap="10%"
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="year" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="units" fill="#0077b6" radius={[4, 4, 0, 0]} />
+          <Bar
+            dataKey="units"
+            fill="#0077b6"
+            radius={[4, 4, 0, 0]}
+            barSize={40}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
