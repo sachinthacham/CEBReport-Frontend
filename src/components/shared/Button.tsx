@@ -1,17 +1,30 @@
+import React from "react";
+
 type ButtonProps = {
-  children: string;
+  children: React.ReactNode;
+  color?: string;
+  width?: string;
+  height?: string;
   onClick?: () => void;
+  className?: string;
 };
 
-const Button = ({ children, onClick }: ButtonProps) => {
+const CustomButton: React.FC<ButtonProps> = ({
+  children,
+  color = "bg-blue-500",
+  width = "w-auto",
+  height = "h-auto",
+  onClick,
+  className = "",
+}) => {
   return (
     <button
-      className="w-full h-10 bg-[#e9ecef] hover:bg-[#0a9396] text-[#0a9396] hover:text-white font-medium rounded-md shadow-md transition duration-200 ease-in-out px-4 text-sm"
       onClick={onClick}
+      className={`text-white px-4 py-2 rounded ${color} ${width} ${height} ${className}`}
     >
       {children}
     </button>
   );
 };
 
-export default Button;
+export default CustomButton;

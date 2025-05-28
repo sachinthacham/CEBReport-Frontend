@@ -34,7 +34,7 @@ const UserDetails = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 w-full ">
+          <div className="grid grid-cols-2 w-full">
             {userDetails.map((item, index) => (
               <Detail
                 key={index}
