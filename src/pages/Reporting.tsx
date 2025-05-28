@@ -1,42 +1,34 @@
-// import Navbar from "../components/layout/Navbar";
-// import Sidebar from "../components/layout/Sidebar";
-// import UserNavBar from "../components/layout/UserNavBar";
-
-// const Reporting = () => {
-//   return (
-//     <div className="min-h-screen">
-//       <UserNavBar />
-//       <Navbar />
-//       <div className="flex">
-//         {/* Sidebar */}
-//         <div className="w-1/5">
-//           <Sidebar />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Reporting;
-
 import { useState } from "react";
-import Navbar from "../components/layout/Navbar";
-import Sidebar from "../components/layout/Sidebar";
-import UserNavBar from "../components/layout/UserNavBar";
-import { data } from "../data/SideBarData";
-import BillingForm from "../components/billing/Billing_Form";
 import { Customer } from "../data/DataTypes";
 import { postJSON } from "../helpers/LoginHelper";
+import { useLocation } from "react-router-dom";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import BillingForm from "../components/billing/Billing_Form";
 import BillingChart from "../components/billing/Biling_Chart";
 
+type Subtopic = {
+  id: number;
+  name: string;
+};
+
 const Reporting = () => {
+  const location = useLocation();
+  const subtopics: Subtopic[] = location.state?.subtopics || [];
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const [visibleCard, setVisibleCard] = useState<number | null>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
 
   const toggleCard = (id: number) => {
-    setExpandedCard(expandedCard === id ? null : id);
+    if (expandedCard === id) {
+      // Collapse the card
+      setExpandedCard(null);
+      setTimeout(() => setVisibleCard(null), 1000); // Delay content removal to match animation duration
+    } else {
+      // Expand the card
+      setVisibleCard(id);
+      setTimeout(() => setExpandedCard(id), 200); // Ensure smooth expansion
+    }
   };
-
-  const [customer, setCustomer] = useState<Customer | null>(null);
 
   const handleFormSubmit = async (details: {
     acctNo: string;
@@ -51,40 +43,48 @@ const Reporting = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <UserNavBar />
-      <Navbar />
+    <div className="min-h-screen bg-[#f8f9fa]">
       <div className="flex">
-        {/* Sidebar */}
-        <div className="w-1/5">
-          <Sidebar />
-        </div>
         {/* Main Content */}
-        <div className="w-4/5 p-4">
-          <div className="grid grid-cols-1 gap-4">
-            {data.map((card) => (
-              <div
-                key={card.id}
-                className="border rounded-lg p-4 shadow-md cursor-pointer"
-                onClick={() => toggleCard(card.id)}
-              >
-                <h3 className="text-lg font-bold">{card.name}</h3>
-                {expandedCard === card.id && (
-                  <div className="mt-4">
-                    {/* Billing Form */}
-                    <div className="mb-4">
-                      <h4 className="text-md font-semibold">Billing Form</h4>
-                      <BillingForm onSubmit={handleFormSubmit} />
-                    </div>
-                    {/* Billing Chart */}
-                    <div>
-                      <h4 className="text-md font-semibold">Billing Chart</h4>
-                      {customer && (
-                        <BillingChart data={customer.customerReadDetail} />
-                      )}
-                    </div>
+        <div className="w-full p-4 bg-[#f8f9fa]">
+          <div className="grid grid-cols-1 gap-4 w-full">
+            {subtopics.map((subtopic) => (
+              <div key={subtopic.id} className="rounded-lg shadow-md">
+                {/* Card Header */}
+                <div
+                  className="p-4 cursor-pointer hover:bg-gray-100 bg-white"
+                  onClick={() => toggleCard(subtopic.id)}
+                >
+                  <div className="flex items-center gap-2">
+                    <ChevronDownIcon
+                      className={`h-5 w-5 text-gray-600 transition-transform duration-300 ${
+                        expandedCard === subtopic.id ? "rotate-180" : ""
+                      }`}
+                    />
+                    <h3 className="text-md">{subtopic.name}</h3>
                   </div>
-                )}
+                </div>
+                {/* Expandable Content */}
+                <div
+                  className={`overflow-hidden transition-[max-height] duration-1000 ease-in-out bg-white ${
+                    expandedCard === subtopic.id ? "max-h-[1000px]" : "max-h-0"
+                  }`}
+                >
+                  {visibleCard === subtopic.id && (
+                    <div className="p-4 gap-10 w-full ">
+                      {/* Billing Form */}
+                      <div className="w-full flex flex-col gap-2 text-sm">
+                        <BillingForm onSubmit={handleFormSubmit} />
+                      </div>
+                      {/* Billing Chart */}
+                      <div className="w-full">
+                        {customer && (
+                          <BillingChart data={customer.customerReadDetail} />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -8,11 +8,11 @@ const Sidebar = () => {
     navigate(path, { state: { subtopics } });
   };
   return (
-    <div className="w-full bg-white min-h-screen p-4 text-[#800000] font-normal cursor-pointer">
+    <div className="w-full bg-white p-4 text-[#800000] font-normal cursor-pointer">
       {data.map((topic) => (
         <div key={topic.id} className="mb-2">
           <div
-            className="bg-white p-3 rounded shadow cursor-pointer hover:bg-gray-200"
+            className="bg-white p-2 rounded shadow cursor-pointer hover:bg-gray-200"
             onClick={() => handleClick(topic.path, topic.subtopics)}
           >
             <div className="flex justify-between items-center">

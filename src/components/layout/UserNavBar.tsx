@@ -67,7 +67,7 @@ const UserNavBar = () => {
       ref={dropdownRef}
     >
       <FaUser size={24} color="white" />
-      <div className="text-white text-md cursor-pointer" onClick={handleToggle}>
+      <div className="text-white text-sm cursor-pointer" onClick={handleToggle}>
         {user.Name}
       </div>
 
