@@ -8,61 +8,53 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import CustomButton from "../shared/Button";
-import { BsBoxArrowUpRight } from "react-icons/bs";
-import Popup from "../shared/Popup";
+import CustomButton from "../../../shared/Button";
+import Popup from "../../../shared/Popup";
 import { useState } from "react";
+import { BsBoxArrowUpRight } from "react-icons/bs";
+
+type ReadDetails = {
+  billCycle: string;
+  days: string;
+  kwh: string;
+  readDate: string;
+  readMet1: string;
+  readMet2: string;
+  readMet3: string;
+  units: string;
+  year: string;
+};
 
 type Props = {
-  data: customerTransDetail[];
+  data: ReadDetails[];
 };
 
-export type customerTransDetail = {
-  billCycle: string;
-  yrMnth: string;
-  days: string;
-  units: string;
-  metRead1: null | string;
-  metRead2: null | string;
-  metRead3: null | string;
-  transDate: string;
-  transAmt: number;
-  transDrCr: string;
-  transCode: null | string;
-  transType: string;
-  prvBalance: number;
-  balance: number;
-  balDrCr: string;
-};
-
-const BillingChart3 = ({ data }: Props) => {
+const BillingChart = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
-  const filteredData = data?.filter((item) => item.transDrCr === "Dr");
-
   return (
-    data &&
-    filteredData.length > 0 && (
+    data && (
       <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-2">
         <div className="w-full h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={filteredData}
+              data={data}
+              barCategoryGap="10%"
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+              <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
               <YAxis
-                domain={[0, "dataMax + 50"]}
                 tick={{ fontSize: 12, fill: "#333" }}
+                domain={[0, "dataMax + 50"]}
                 allowDataOverflow
               />
               <Tooltip />
               <Legend />
               <Bar
-                dataKey="transAmt"
-                fill="#ffa600"
-                stroke="#ffa600"
+                dataKey="units"
+                fill="#118ab2"
                 radius={[4, 4, 0, 0]}
+                barSize={40}
               />
             </BarChart>
           </ResponsiveContainer>
@@ -93,4 +85,4 @@ const BillingChart3 = ({ data }: Props) => {
   );
 };
 
-export default BillingChart3;
+export default BillingChart;

@@ -1,6 +1,6 @@
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -8,14 +8,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import Popup from "../shared/Popup";
-import CustomButton from "../shared/Button";
+import CustomButton from "../../../shared/Button";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import Popup from "../../../shared/Popup";
 import { useState } from "react";
 
 type Props = {
   data: customerTransDetail[];
 };
+
 export type customerTransDetail = {
   billCycle: string;
   yrMnth: string;
@@ -34,16 +35,17 @@ export type customerTransDetail = {
   balDrCr: string;
 };
 
-const BillingChart2 = ({ data }: Props) => {
-  const filteredData = data?.filter((item) => item.transDrCr === "Cr");
+const BillingChart3 = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
+  const filteredData = data?.filter((item) => item.transDrCr === "Dr");
+
   return (
     data &&
     filteredData.length > 0 && (
       <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-2">
-        <div className="w-full h-72 ">
+        <div className="w-full h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
+            <BarChart
               data={filteredData}
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
@@ -56,16 +58,16 @@ const BillingChart2 = ({ data }: Props) => {
               />
               <Tooltip />
               <Legend />
-              <Area
-                type="monotone"
+              <Bar
                 dataKey="transAmt"
-                stroke="#00bfae"
-                fill="#b7efc5"
-                fillOpacity={0.4}
+                fill="#ffa600"
+                stroke="#ffa600"
+                radius={[4, 4, 0, 0]}
               />
-            </AreaChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
+
         {/* View Report Button */}
         <div className="flex justify-center items-center">
           <CustomButton
@@ -91,4 +93,4 @@ const BillingChart2 = ({ data }: Props) => {
   );
 };
 
-export default BillingChart2;
+export default BillingChart3;

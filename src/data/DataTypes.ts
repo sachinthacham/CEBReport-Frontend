@@ -48,3 +48,26 @@ export type RawTransaction = {
   balance?: number;
   balDrCr?: string;
 };
+
+export type OrdinaryCusTransaction = {
+  customerMasDetail: any;
+  customerTransDetail: customerTransDetail[];
+};
+
+export type customerTransDetail = {
+  billCycle: string;
+  yrMnth: string;
+  days: string;
+  units: string;
+  metRead1: null | string;
+  metRead2: null | string;
+  metRead3: null | string;
+  transDate: string;
+  transAmt: number;
+  transDrCr: string;
+  transCode: null | string;
+  transType: string;
+  prvBalance: number;
+  balance: number;
+  balDrCr: string;
+};

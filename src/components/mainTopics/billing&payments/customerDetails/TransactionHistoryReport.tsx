@@ -1,28 +1,25 @@
-import React, { useEffect, useState, useRef } from "react";
-import { postJSON } from "../../helpers/LoginHelper";
+import { useEffect, useState, useRef } from "react";
+import { postJSON } from "../../../../helpers/LoginHelper";
 import {
   Transaction,
   CustomerTransactionHistory,
-  TransactionHistoryProps,
   RawTransaction,
-} from "../../data/DataTypes";
+} from "../../../../data/DataTypes";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/Store";
 
-const TransactionHistoryReport: React.FC<TransactionHistoryProps> = ({
-  initialAccountNumber,
-  FbillCycle,
-  TbillCycle,
-}) => {
+const TransactionHistoryReport = () => {
   const [data, setData] = useState<CustomerTransactionHistory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
+  const { acctNo, FbillCycle, TbillCycle } = useSelector(
+    (state: RootState) => state.billing
+  );
+
   useEffect(() => {
-    if (
-      !initialAccountNumber ||
-      FbillCycle === undefined ||
-      TbillCycle === undefined
-    ) {
+    if (!acctNo || FbillCycle === undefined || TbillCycle === undefined) {
       setLoading(false);
       return;
     }
@@ -33,7 +30,7 @@ const TransactionHistoryReport: React.FC<TransactionHistoryProps> = ({
 
       try {
         const payload = {
-          acctNo: initialAccountNumber,
+          acctNo: acctNo,
           FbillCycle: FbillCycle,
           TbillCycle: TbillCycle,
         };
@@ -87,7 +84,7 @@ const TransactionHistoryReport: React.FC<TransactionHistoryProps> = ({
     };
 
     fetchData();
-  }, [initialAccountNumber, FbillCycle, TbillCycle]);
+  }, [acctNo, FbillCycle, TbillCycle]);
 
   // Download as Excel (CSV)
   const downloadAsCSV = () => {

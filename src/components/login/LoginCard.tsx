@@ -56,7 +56,7 @@ const LoginCard = () => {
     <div>
       <div className="bg-[#ffffff] shadow-lg rounded-lg p-6">
         <div className="flex justify-center mb-4">
-          <img src={ceb} alt="CEB Logo" className="w-40 h-20" />
+          <img src={ceb} alt="CEB Logo" className="w-35 h-20" />
         </div>
         <div className="text-center text-sm text-gray-600 mb-6">
           Sign In With Credentials

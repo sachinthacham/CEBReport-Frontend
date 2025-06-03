@@ -1,4 +1,4 @@
-import Reporting from "./pages/Reporting";
+import Reporting from "./pages/Report";
 import LoginPage from "./pages/LoginPage";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
