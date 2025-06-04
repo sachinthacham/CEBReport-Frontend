@@ -1,4 +1,6 @@
 import {
+  AreaChart,
+  Area,
   BarChart,
   Bar,
   XAxis,
@@ -37,39 +39,86 @@ export type customerTransDetail = {
 
 const BillingChart3 = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [chartType, setChartType] = useState<"bar" | "area">("bar");
+
   const filteredData = data?.filter((item) => item.transDrCr === "Dr");
+
+  const renderChart = () => {
+    if (chartType === "area") {
+      return (
+        <AreaChart
+          data={filteredData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <YAxis
+            domain={[0, "dataMax + 50"]}
+            tick={{ fontSize: 12, fill: "#333" }}
+          />
+          <Tooltip />
+          <Legend />
+          <Area
+            type="monotone"
+            dataKey="transAmt"
+            stroke="#ffa600"
+            fill="#ffe5b4"
+            fillOpacity={0.4}
+          />
+        </AreaChart>
+      );
+    } else {
+      return (
+        <BarChart
+          data={filteredData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <YAxis
+            domain={[0, "dataMax + 50"]}
+            tick={{ fontSize: 12, fill: "#333" }}
+            allowDataOverflow
+          />
+          <Tooltip />
+          <Legend />
+          <Bar
+            dataKey="transAmt"
+            fill="#ffa600"
+            stroke="#ffa600"
+            radius={[4, 4, 0, 0]}
+          />
+        </BarChart>
+      );
+    }
+  };
 
   return (
     data &&
     filteredData.length > 0 && (
-      <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-2">
+      <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-4">
+        {/* Dropdown Selector */}
+        <div className="flex justify-end items-center p-2">
+          <select
+            id="chart-select"
+            value={chartType}
+            onChange={(e) => setChartType(e.target.value as "bar" | "area")}
+            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+          >
+            <option value="bar">Bar Chart</option>
+            <option value="area">Area Chart</option>
+          </select>
+        </div>
+
+        {/* Chart Display */}
         <div className="w-full h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={filteredData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
-              <YAxis
-                domain={[0, "dataMax + 50"]}
-                tick={{ fontSize: 12, fill: "#333" }}
-                allowDataOverflow
-              />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="transAmt"
-                fill="#ffa600"
-                stroke="#ffa600"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
+            {renderChart()}
           </ResponsiveContainer>
         </div>
 
         {/* View Report Button */}
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mt-2">
           <CustomButton
             color="bg-[#005f73] hover:bg-green-700"
             icon={<BsBoxArrowUpRight className="h-5 w-5" />}
@@ -81,6 +130,7 @@ const BillingChart3 = ({ data }: Props) => {
           </CustomButton>
         </div>
 
+        {/* Popup */}
         {showPopup && (
           <Popup
             title="Report Preview"
