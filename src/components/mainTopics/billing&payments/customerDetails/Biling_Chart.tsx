@@ -1,17 +1,9 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import CustomButton from "../../../shared/Button";
 import Popup from "../../../shared/Popup";
 import { useState } from "react";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import BarChartComponent from "./BarChart";
+import AreaChartComponent from "./AreaChart";
 
 type ReadDetails = {
   billCycle: string;
@@ -31,37 +23,34 @@ type Props = {
 
 const BillingChart = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [chartType, setChartType] = useState<"bar" | "area">("bar");
+
   return (
     data && (
-      <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-2">
+      <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-4">
+        {/* Dropdown */}
+        <div className="flex justify-end p-2">
+          <select
+            value={chartType}
+            onChange={(e) => setChartType(e.target.value as "bar" | "area")}
+            className="border border-gray-300 rounded px-2 py-1 text-sm"
+          >
+            <option value="bar">Bar Chart</option>
+            <option value="area">Area Chart</option>
+          </select>
+        </div>
+
+        {/* Chart */}
         <div className="w-full h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              barCategoryGap="10%"
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
-              <YAxis
-                tick={{ fontSize: 12, fill: "#333" }}
-                domain={[0, "dataMax + 50"]}
-                allowDataOverflow
-              />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="units"
-                fill="#118ab2"
-                radius={[4, 4, 0, 0]}
-                barSize={40}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {chartType === "bar" ? (
+            <BarChartComponent data={data} />
+          ) : (
+            <AreaChartComponent data={data} />
+          )}
         </div>
 
         {/* View Report Button */}
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mt-2">
           <CustomButton
             color="bg-[#005f73] hover:bg-green-700"
             icon={<BsBoxArrowUpRight className="h-5 w-5" />}
