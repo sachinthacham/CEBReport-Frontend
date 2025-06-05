@@ -20,7 +20,7 @@ const billingSlice = createSlice({
     setBillingData(state, action: PayloadAction<BillingState>) {
       return { ...state, ...action.payload };
     },
-    clearBillingData(state) {
+    clearBillingData() {
       return initialState;
     },
   },
