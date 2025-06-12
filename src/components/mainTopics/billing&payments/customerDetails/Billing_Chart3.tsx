@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import CustomButton from "../../../shared/Button";
 import { BsBoxArrowUpRight } from "react-icons/bs";
-import Popup from "../../../shared/Popup";
+import Popup from "../../../shared/Popup1";
 import { useState } from "react";
 
 type Props = {
@@ -41,13 +41,11 @@ const BillingChart3 = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [chartType, setChartType] = useState<"bar" | "area">("bar");
 
-  const filteredData = data?.filter((item) => item.transDrCr === "Dr");
-
   const renderChart = () => {
     if (chartType === "area") {
       return (
         <AreaChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -60,7 +58,7 @@ const BillingChart3 = ({ data }: Props) => {
           <Legend />
           <Area
             type="monotone"
-            dataKey="transAmt"
+            dataKey="balance"
             stroke="#ffa600"
             fill="#ffe5b4"
             fillOpacity={0.4}
@@ -70,7 +68,7 @@ const BillingChart3 = ({ data }: Props) => {
     } else {
       return (
         <BarChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -83,7 +81,7 @@ const BillingChart3 = ({ data }: Props) => {
           <Tooltip />
           <Legend />
           <Bar
-            dataKey="transAmt"
+            dataKey="balance"
             fill="#ffa600"
             stroke="#ffa600"
             radius={[4, 4, 0, 0]}
@@ -95,7 +93,7 @@ const BillingChart3 = ({ data }: Props) => {
 
   return (
     data &&
-    filteredData.length > 0 && (
+    data.length > 0 && (
       <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-4">
         {/* Dropdown Selector */}
         <div className="flex justify-end items-center p-2">

@@ -41,24 +41,27 @@ const UserNavBar = () => {
 
   return (
     <div
-      className="w-full py-2 flex justify-end bg-[#800000] px-5 gap-3 relative"
+      className="w-full h-12 flex items-center justify-end bg-[#800000] px-4 sm:px-6 gap-2 sm:gap-3 relative"
       ref={dropdownRef}
     >
-      <FaUser size={24} color="white" />
-      <div className="text-white text-sm cursor-pointer" onClick={handleToggle}>
+      <FaUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+      <div
+        className="text-white text-xs sm:text-sm cursor-pointer hover:text-gray-200 transition-colors"
+        onClick={handleToggle}
+      >
         {user.Name}
       </div>
 
       {isOpen && (
-        <div className="absolute right-5 top-12 bg-white shadow-lg rounded-md w-40 z-50">
+        <div className="absolute right-4 sm:right-6 top-full mt-1 bg-white shadow-lg rounded-md w-40 z-50">
           <button
-            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm"
+            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm transition-colors"
             onClick={handleProfileClick}
           >
             My Profile
           </button>
           <button
-            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm text-red-600"
+            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm text-red-600 transition-colors"
             onClick={handleLogout}
           >
             Logout

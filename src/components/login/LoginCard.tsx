@@ -53,15 +53,19 @@ const LoginCard = () => {
   };
 
   return (
-    <div>
-      <div className="bg-[#ffffff] shadow-lg rounded-lg p-6">
+    <div className="w-full">
+      <div className="bg-[#ffffff] shadow-lg rounded-lg p-4 sm:p-6 md:p-8">
         <div className="flex justify-center mb-4">
-          <img src={ceb} alt="CEB Logo" className="w-35 h-20" />
+          <img
+            src={ceb}
+            alt="CEB Logo"
+            className="w-24 sm:w-32 md:w-35 h-auto"
+          />
         </div>
-        <div className="text-center text-sm text-gray-600 mb-6">
+        <div className="text-center text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
           Sign In With Credentials
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <InputField
             label="Username"
             type="text"
@@ -85,12 +89,12 @@ const LoginCard = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-[#7c0000] text-white py-2 rounded shadow hover:shadow-lg transition-all duration-150"
+            className="w-full bg-[#7c0000] text-white py-2 px-4 rounded shadow hover:shadow-lg transition-all duration-150 text-sm sm:text-base"
           >
             Sign In
           </button>
         </form>
-        <div className="flex justify-between mt-6 text-sm text-gray-500"></div>
+        <div className="flex justify-between mt-4 sm:mt-6 text-xs sm:text-sm text-gray-500"></div>
       </div>
     </div>
   );

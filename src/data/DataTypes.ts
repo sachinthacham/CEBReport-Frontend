@@ -14,13 +14,39 @@ export type ReadDetails = {
   year: string;
 };
 
+export type BulkCustomer = {
+  customerMasDetail: any;
+  customerTransDetail: BulkCustomerTransDetails[];
+};
+
+export type BulkCustomerTransDetails = {
+  billCycle: string;
+  year: string;
+  transDate: string | null;
+  transType: string;
+  reading: string | null;
+  units: string | null;
+  rate: number;
+  amount: number;
+  monthlyChg: number;
+  payments: number;
+  debits: number;
+  credits: number;
+  dueAmount: number;
+  dueAmtDrCr: null;
+  balance: string | null;
+  balanceDrCr: string | null;
+};
+
 export interface Transaction {
-  billMonth: string;
+  billCycle: string;
   transactionDate: string;
   description: string;
   transactionAmount: string;
   balance: string;
-  billCycle?: string;
+  yrMnth: string;
+  Days: string;
+  Units: string;
 }
 
 export interface CustomerTransactionHistory {
@@ -28,8 +54,15 @@ export interface CustomerTransactionHistory {
   name: string;
   address: string;
   tariff: string;
+  wlkOdr: string;
+  met1: string;
+  met2: string;
+  met3: string;
   area: string;
+  province: string;
+  netType: string;
   balance: string;
+  date: string;
   transactions: Transaction[];
 }
 
@@ -42,10 +75,14 @@ export interface TransactionHistoryProps {
 export type RawTransaction = {
   billCycle: string;
   yrMnth?: string;
+  days?: string;
+  units?: string;
+  acctNumber?: string;
   transDate?: string;
   transType?: string;
   transAmt?: number;
   balance?: number;
+  transDrCr?: string;
   balDrCr?: string;
 };
 

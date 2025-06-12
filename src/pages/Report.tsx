@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
+import MaterialMaster from "../mainTopics/inventory/MaterialMaster";
 
 type Subtopic = {
   id: number;
@@ -28,13 +29,15 @@ const ReportContent = () => {
     switch (name) {
       case "Customer information":
         return <CustomerDetails />;
+      case "Ceylon Electricity Board Material Details":
+        return <MaterialMaster />;
       default:
         return <p className="p-4">No content available.</p>;
     }
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 pt-5">
       {subtopics.map((subtopic) => (
         <div key={subtopic.id} className="rounded-lg shadow-md">
           {/* Card Header */}
@@ -48,7 +51,7 @@ const ReportContent = () => {
                   expandedCard === subtopic.id ? "rotate-180" : ""
                 }`}
               />
-              <h3 className="text-md">{subtopic.name}</h3>
+              <h3 className="text-sm">{subtopic.name}</h3>
             </div>
           </div>
 

@@ -1,24 +1,31 @@
 import CustomButton from "../../../shared/Button";
-import Popup1 from "../../../shared/Popup1";
 import { useState } from "react";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import BarChartComponent from "./BarChart";
 import AreaChartComponent from "./AreaChart";
-
-type ReadDetails = {
-  billCycle: string;
-  days: string;
-  kwh: string;
-  readDate: string;
-  readMet1: string;
-  readMet2: string;
-  readMet3: string;
-  units: string;
-  year: string;
-};
+import Popup3 from "../../../shared/Popup3";
 
 type Props = {
-  data: ReadDetails[];
+  data: customerTransDetail[];
+};
+
+export type customerTransDetail = {
+  billCycle: string;
+  year: string;
+  transDate: string | null;
+  transType: string;
+  reading: string | null;
+  units: string | null;
+  rate: number;
+  amount: number;
+  monthlyChg: number;
+  payments: number;
+  debits: number;
+  credits: number;
+  dueAmount: number;
+  dueAmtDrCr: null;
+  balance: string | null;
+  balanceDrCr: string | null;
 };
 
 const BillingChart = ({ data }: Props) => {
@@ -63,7 +70,7 @@ const BillingChart = ({ data }: Props) => {
         </div>
 
         {showPopup && (
-          <Popup1
+          <Popup3
             title="Report Preview"
             message="Here’s your report preview or message..."
             onClose={() => setShowPopup(false)}
