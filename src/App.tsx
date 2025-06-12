@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./Layout";
 import UserDetails from "./pages/UserDetails";
+import MaterialDetails from "./mainTopics/inventory/MaterialDetails";
 
 function App() {
   return (
@@ -24,6 +25,14 @@ function App() {
           element={
             <Layout>
               <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/material-details/:matCd"
+          element={
+            <Layout>
+              <MaterialDetails />
             </Layout>
           }
         />

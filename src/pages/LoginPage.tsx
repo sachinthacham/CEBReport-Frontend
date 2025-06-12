@@ -3,8 +3,8 @@ import LoginCard from "../components/login/LoginCard";
 
 const LoginPage = () => {
   return (
-    <main>
-      <section className="relative w-full min-h-screen flex items-center justify-center">
+    <main className="min-h-screen w-full">
+      <section className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div
           className="absolute inset-x-0 bottom-0 w-full"
           style={{
@@ -17,7 +17,7 @@ const LoginPage = () => {
           }}
         ></div>
 
-        <div className="w-full max-w-md px-4 ">
+        <div className="w-full max-w-md">
           <LoginCard />
         </div>
       </section>

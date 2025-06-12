@@ -1,10 +1,10 @@
 import { useState, FormEvent, useEffect } from "react";
-//import CustomButton from "../shared/Button";
-//import Popup from "../shared/Popup";
 import axios from "axios";
 import debounce from "lodash/debounce";
 import { useDispatch } from "react-redux";
 import { setBillingData } from "../../../../redux/slices/BillingSlice";
+import { MdPermIdentity } from "react-icons/md";
+import { MdDateRange } from "react-icons/md";
 
 type Props = {
   onSubmit: (details: {
@@ -34,13 +34,19 @@ const BillingForm = ({ onSubmit }: Props) => {
 
   // Debounced function to post acctNo and fetch months
   const fetchMonths = debounce(async (acct: string) => {
-    if (!acct) return;
+    if (!acct || acct.length < 3) return;
     try {
       setLoading(true);
-      const response = await axios.post<BillMonthResponse>(
-        "/CEBINFO_API_2025/api/billMonth",
-        { acctNo: acct }
-      );
+
+      const url =
+        acct[2] === "7"
+          ? "/CEBINFO_API_2025/api/billMonthBulk" // alternate URL when 3rd digit is 7
+          : "/CEBINFO_API_2025/api/billMonth"; // default URL
+
+      const response = await axios.post<BillMonthResponse>(url, {
+        acctNo: acct,
+      });
+
       setMonths(response.data.yrMnthDetail || []);
       console.log("Fetched months:", response.data.yrMnthDetail);
       setError("");
@@ -51,7 +57,8 @@ const BillingForm = ({ onSubmit }: Props) => {
     } finally {
       setLoading(false);
     }
-  }, 500); // 500ms debounce
+  }, 500);
+  // 500ms debounce
 
   // Effect to trigger POST request when acctNo changes
   useEffect(() => {
@@ -79,24 +86,32 @@ const BillingForm = ({ onSubmit }: Props) => {
         className="p-4 rounded shadow-md w-full flex flex-row items-end gap-4 bg-white"
       >
         {/* Account Number */}
+        {/* Account Number */}
         <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal">Account Number</label>
+          <label className="text-sm font-normal flex items-center gap-1">
+            <MdPermIdentity className="text-blue-500" />
+            Account Number
+          </label>
           <input
             type="text"
             value={acctNo}
             onChange={(e) => setAcctNo(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8"
+            className="mt-1 rounded bg-gray-100 h-8 px-3"
             required
+            placeholder="Enter account number"
           />
         </div>
 
         {/* From Month */}
         <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal">From month</label>
+          <label className="text-sm font-normal flex items-center gap-1">
+            <MdDateRange className="text-blue-500" />
+            From month
+          </label>
           <select
             value={FbillCycle}
             onChange={(e) => setFbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8"
+            className="mt-1 rounded bg-gray-100 h-8 px-3 text-gray-600"
             required
             disabled={loading}
           >
@@ -111,11 +126,14 @@ const BillingForm = ({ onSubmit }: Props) => {
 
         {/* To Month */}
         <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal">To month</label>
+          <label className="text-sm font-normal flex items-center gap-1">
+            <MdDateRange className="text-blue-500" />
+            To month
+          </label>
           <select
             value={TbillCycle}
             onChange={(e) => setTbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8"
+            className="mt-1 rounded bg-gray-100 h-8 px-3 text-gray-600"
             required
             disabled={loading}
           >

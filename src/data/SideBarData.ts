@@ -3,7 +3,6 @@ import { RiBankLine } from "react-icons/ri";
 import { FaBoxes } from "react-icons/fa";
 import { BsFolder2Open } from "react-icons/bs";
 import { MdAssignmentTurnedIn } from "react-icons/md";
-//import { FaFileUpload } from "react-icons/fa";
 import { GiSolarPower } from "react-icons/gi";
 
 export const data = [
@@ -12,6 +11,7 @@ export const data = [
     name: "General",
     icon: MdPayment,
     subtopics: [
+      { id: 18, name: "Sales data for tariff" },
       { id: 1, name: "Bill calculation" },
       { id: 2, name: "Amex customers" },
       { id: 3, name: "Listing of customers" },
@@ -29,7 +29,6 @@ export const data = [
       { id: 15, name: "Standing order report" },
       { id: 16, name: "Illicit tapping of electricity" },
       { id: 17, name: "Registered consumers for SMS alerts" },
-      { id: 18, name: "Sales data for tariff" },
     ],
     path: "/report",
   },
@@ -136,7 +135,7 @@ export const data = [
     id: 8,
     name: "Inventory",
     icon: FaBoxes,
-    subtopics: [{ id: 59, name: "Material Master" }],
+    subtopics: [{ id: 59, name: "Ceylon Electricity Board Material Details" }],
     path: "/report",
   },
 ];

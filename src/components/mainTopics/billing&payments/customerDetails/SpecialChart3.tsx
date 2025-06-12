@@ -1,5 +1,7 @@
 import {
+  AreaChart,
   Area,
+  BarChart,
   Bar,
   XAxis,
   YAxis,
@@ -7,12 +9,10 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  AreaChart,
-  BarChart,
 } from "recharts";
-import Popup2 from "../../../shared/Popup2";
 import CustomButton from "../../../shared/Button";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import Popup3 from "../../../shared/Popup1";
 import { useState } from "react";
 
 type Props = {
@@ -21,36 +21,36 @@ type Props = {
 
 export type customerTransDetail = {
   billCycle: string;
-  yrMnth: string;
-  days: string;
-  units: string;
-  metRead1: null | string;
-  metRead2: null | string;
-  metRead3: null | string;
-  transDate: string;
-  transAmt: number;
-  transDrCr: string;
-  transCode: null | string;
+  year: string;
+  transDate: string | null;
   transType: string;
-  prvBalance: number;
-  balance: number;
-  balDrCr: string;
+  reading: string | null;
+  units: string | null;
+  rate: number;
+  amount: number;
+  monthlyChg: number;
+  payments: number;
+  debits: number;
+  credits: number;
+  dueAmount: number;
+  dueAmtDrCr: null;
+  balance: string | null;
+  balanceDrCr: string | null;
 };
 
-const BillingChart2 = ({ data }: Props) => {
-  const filteredData = data?.filter((item) => item.transDrCr === "Cr");
+const BillingChart3 = ({ data }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [chartType, setChartType] = useState<"area" | "bar">("area");
+  const [chartType, setChartType] = useState<"bar" | "area">("bar");
 
   const renderChart = () => {
     if (chartType === "area") {
       return (
         <AreaChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
           <YAxis
             domain={[0, "dataMax + 50"]}
             tick={{ fontSize: 12, fill: "#333" }}
@@ -59,9 +59,9 @@ const BillingChart2 = ({ data }: Props) => {
           <Legend />
           <Area
             type="monotone"
-            dataKey="transAmt"
-            stroke="#00bfae"
-            fill="#b7efc5"
+            dataKey="balance"
+            stroke="#ffa600"
+            fill="#ffe5b4"
             fillOpacity={0.4}
           />
         </AreaChart>
@@ -69,18 +69,24 @@ const BillingChart2 = ({ data }: Props) => {
     } else {
       return (
         <BarChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
           <YAxis
             domain={[0, "dataMax + 50"]}
             tick={{ fontSize: 12, fill: "#333" }}
+            allowDataOverflow
           />
           <Tooltip />
           <Legend />
-          <Bar dataKey="transAmt" fill="#00bfae" />
+          <Bar
+            dataKey="balance"
+            fill="#ffa600"
+            stroke="#ffa600"
+            radius={[4, 4, 0, 0]}
+          />
         </BarChart>
       );
     }
@@ -88,18 +94,18 @@ const BillingChart2 = ({ data }: Props) => {
 
   return (
     data &&
-    filteredData.length > 0 && (
+    data.length > 0 && (
       <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-4">
         {/* Dropdown Selector */}
         <div className="flex justify-end items-center p-2">
           <select
             id="chart-select"
             value={chartType}
-            onChange={(e) => setChartType(e.target.value as "area" | "bar")}
+            onChange={(e) => setChartType(e.target.value as "bar" | "area")}
             className="border border-gray-300 rounded-md px-2 py-1 text-sm"
           >
-            <option value="area">Area Chart</option>
             <option value="bar">Bar Chart</option>
+            <option value="area">Area Chart</option>
           </select>
         </div>
 
@@ -110,8 +116,8 @@ const BillingChart2 = ({ data }: Props) => {
           </ResponsiveContainer>
         </div>
 
-        {/* Report Button */}
-        <div className="flex justify-center items-center mt-2">
+        {/* View Report Button */}
+        {/* <div className="flex justify-center items-center mt-2">
           <CustomButton
             color="bg-[#005f73] hover:bg-green-700"
             icon={<BsBoxArrowUpRight className="h-5 w-5" />}
@@ -121,19 +127,19 @@ const BillingChart2 = ({ data }: Props) => {
           >
             View Report
           </CustomButton>
-        </div>
+        </div> */}
 
         {/* Popup */}
-        {showPopup && (
-          <Popup2
+        {/* {showPopup && (
+          <Popup3
             title="Report Preview"
             message="Here’s your report preview or message..."
             onClose={() => setShowPopup(false)}
           />
-        )}
+        )} */}
       </div>
     )
   );
 };
 
-export default BillingChart2;
+export default BillingChart3;

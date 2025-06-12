@@ -1,20 +1,42 @@
+import { useEffect, useState, useRef } from "react";
 import { postJSON } from "../../../../helpers/LoginHelper";
-import {
-  Transaction,
-  CustomerTransactionHistory,
-  RawTransaction,
-} from "../../../../data/DataTypes";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
 
-import { useEffect, useState, useRef } from "react";
+interface Transaction {
+  billCycle: string;
+  year: string;
+  readDate: string;
+  readMet1: string;
+  readMet2: string;
+  readMet3: string;
+  days: string;
+  units: string;
+  kwh: string;
+}
 
-const TransactionHistoryReport = () => {
+interface CustomerTransactionHistory {
+  accountNumber: string;
+  name: string;
+  address: string;
+  tariff: string;
+  wlkOdr: string;
+  met1: string;
+  met2: string;
+  met3: string;
+  area: string;
+  province: string;
+  netType: string;
+  balance: string;
+  date: string;
+  transactions: Transaction[];
+}
+
+const ReadingHistoryReport = () => {
   const [data, setData] = useState<CustomerTransactionHistory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
-
   const { acctNo, FbillCycle, TbillCycle } = useSelector(
     (state: RootState) => state.billing
   );
@@ -37,36 +59,24 @@ const TransactionHistoryReport = () => {
         };
 
         const result = await postJSON(
-          "/CEBINFO_API_2025/api/OrdinaryCusTransaction",
+          "/CEBINFO_API_2025/api/OrdinaryReadingHistory",
           payload
         );
+        console.log("API result:", result);
 
         const customer = result.customerMasDetail;
-        let transactions = (result.customerTransDetail || []).map(
-          (t: RawTransaction) => ({
-            billMonth: t.yrMnth || t.billCycle || "",
-            billCycle: t.billCycle,
-            yrMnth: t.yrMnth || "",
-            Days: t.days || "",
-            Units: t.units || "",
-            acctNumber: t.acctNumber || "",
-            transactionDate: t.transDate || "",
-            description: t.transType || "",
-            transactionAmount:
-              t.transAmt !== undefined && t.transAmt !== null
-                ? t.transAmt.toFixed(2) + (t.balDrCr ? " " + t.balDrCr : "")
-                : "",
-            balance:
-              t.balance !== undefined && t.balance !== null
-                ? t.balance.toFixed(2) + (t.balDrCr ? " " + t.balDrCr : "")
-                : "",
-          })
-        );
-
-        transactions = transactions.filter((t: Transaction) => {
-          const cycle = Number(t.billCycle);
-          return !isNaN(cycle) && cycle >= FbillCycle && cycle <= TbillCycle;
-        });
+        let transactions = (result.customerReadDetail || []).map((t: any) => ({
+          billCycle: t.billCycle || "",
+          year: t.year || "",
+          readDate: t.readDate || "",
+          readMet1: t.readMet1 || "",
+          readMet2: t.readMet2 || "",
+          readMet3: t.readMet3 || "",
+          days: t.days || "",
+          units: t.units || "",
+          kwh: t.kwh || "",
+        }));
+        console.log("Transactions:", transactions);
 
         setData({
           accountNumber: customer.acctNumber || "",
@@ -80,11 +90,8 @@ const TransactionHistoryReport = () => {
           met3: customer.met3 || "",
           province: customer.province || "",
           netType: customer.netType || "",
-          date: new Date().toLocaleString(), // <-- real-time date here
-          balance:
-            transactions.length > 0
-              ? transactions[transactions.length - 1].balance
-              : "",
+          date: new Date().toLocaleString(),
+          balance: "",
           transactions,
         });
       } catch (error: any) {
@@ -103,24 +110,26 @@ const TransactionHistoryReport = () => {
     if (!data) return;
     const csvRows = [
       [
+        "Bill Cycle",
         "Bill Month",
-        "Year & Month",
+        "Reading Date",
+        "Meter 1",
+        "Meter 2",
+        "Meter 3",
+        "Consumption",
         "Days",
-        "Units",
-        "Transaction Date",
-        "Description",
-        "Transaction Amount",
-        "Balance",
+        "Charge",
       ],
       ...data.transactions.map((t) => [
         t.billCycle,
-        t.yrMnth,
-        t.Days,
-        t.Units,
-        t.transactionDate,
-        t.description,
-        t.transactionAmount,
-        t.balance,
+        t.year,
+        t.readDate,
+        t.readMet1,
+        t.readMet2,
+        t.readMet3,
+        t.units,
+        t.days,
+        t.kwh,
       ]),
     ];
     const csvContent =
@@ -129,10 +138,7 @@ const TransactionHistoryReport = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `TransactionHistory_${data.accountNumber}.csv`
-    );
+    link.setAttribute("download", `ReadingHistory_${data.accountNumber}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -170,12 +176,13 @@ const TransactionHistoryReport = () => {
 
   return (
     <div
-      className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow"
+      className="mx-auto p-6 bg-white rounded-lg shadow"
       ref={printRef}
+      style={{ minWidth: 320, maxWidth: "80vw" }}
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-purple-700">
-          Transaction History - Account: {data.accountNumber}
+          Reading History - Account: {data.accountNumber}
         </h2>
         <div className="flex gap-2">
           <button
@@ -210,7 +217,7 @@ const TransactionHistoryReport = () => {
             <div className="text-gray-900">{data.tariff}</div>
           </div>
           <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Wald Order:</div>
+            <div className="text-gray-700 font-semibold mr-2">Walk Order:</div>
             <div className="text-gray-900">{data.wlkOdr}</div>
           </div>
           <div className="flex mb-2">
@@ -259,17 +266,14 @@ const TransactionHistoryReport = () => {
             <thead className="bg-purple-100">
               <tr>
                 <th className="px-4 py-2 border-b text-left">Bill Cycle</th>
-                <th className="px-4 py-2 border-b text-left">Year & Month</th>
-                <th className="px-4 py-2 border-b text-left">Days</th>
-                <th className="px-4 py-2 border-b text-left">Units</th>
-                <th className="px-4 py-2 border-b text-left">
-                  Transaction Date
-                </th>
-                <th className="px-4 py-2 border-b text-left">Description</th>
-                <th className="px-4 py-2 border-b text-right">
-                  Transaction Amount
-                </th>
-                <th className="px-4 py-2 border-b text-right">Balance</th>
+                <th className="px-4 py-2 border-b text-left">Bill Month</th>
+                <th className="px-4 py-2 border-b text-left">Reading Date</th>
+                <th className="px-4 py-2 border-b text-left">Meter 1</th>
+                <th className="px-4 py-2 border-b text-left">Meter 2</th>
+                <th className="px-4 py-2 border-b text-left">Meter 3</th>
+                <th className="px-4 py-2 border-b text-right">Consumption</th>
+                <th className="px-4 py-2 border-b text-right">Days</th>
+                <th className="px-4 py-2 border-b text-right">Charge</th>
               </tr>
             </thead>
             <tbody>
@@ -279,15 +283,14 @@ const TransactionHistoryReport = () => {
                   className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
                   <td className="px-4 py-2 border-b">{t.billCycle}</td>
-                  <td className="px-4 py-2 border-b">{t.yrMnth}</td>
-                  <td className="px-4 py-2 border-b">{t.Days}</td>
-                  <td className="px-4 py-2 border-b">{t.Units}</td>
-                  <td className="px-4 py-2 border-b">{t.transactionDate}</td>
-                  <td className="px-4 py-2 border-b">{t.description}</td>
-                  <td className="px-4 py-2 border-b text-right">
-                    {t.transactionAmount}
-                  </td>
-                  <td className="px-4 py-2 border-b text-right">{t.balance}</td>
+                  <td className="px-4 py-2 border-b">{t.year}</td>
+                  <td className="px-4 py-2 border-b">{t.readDate}</td>
+                  <td className="px-4 py-2 border-b">{t.readMet1}</td>
+                  <td className="px-4 py-2 border-b">{t.readMet2}</td>
+                  <td className="px-4 py-2 border-b">{t.readMet3}</td>
+                  <td className="px-4 py-2 border-b text-right">{t.units}</td>
+                  <td className="px-4 py-2 border-b text-right">{t.days}</td>
+                  <td className="px-4 py-2 border-b text-right">{t.kwh}</td>
                 </tr>
               ))}
             </tbody>
@@ -298,4 +301,4 @@ const TransactionHistoryReport = () => {
   );
 };
 
-export default TransactionHistoryReport;
+export default ReadingHistoryReport;

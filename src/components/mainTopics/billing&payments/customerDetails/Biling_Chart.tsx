@@ -1,5 +1,5 @@
 import CustomButton from "../../../shared/Button";
-import Popup from "../../../shared/Popup";
+import Popup1 from "../../../shared/Popup1";
 import { useState } from "react";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import BarChartComponent from "./BarChart";
@@ -63,7 +63,7 @@ const BillingChart = ({ data }: Props) => {
         </div>
 
         {showPopup && (
-          <Popup
+          <Popup1
             title="Report Preview"
             message="Here’s your report preview or message..."
             onClose={() => setShowPopup(false)}

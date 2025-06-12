@@ -21,24 +21,24 @@ type Props = {
 
 export type customerTransDetail = {
   billCycle: string;
-  yrMnth: string;
-  days: string;
-  units: string;
-  metRead1: null | string;
-  metRead2: null | string;
-  metRead3: null | string;
-  transDate: string;
-  transAmt: number;
-  transDrCr: string;
-  transCode: null | string;
+  year: string;
+  transDate: string | null;
   transType: string;
-  prvBalance: number;
-  balance: number;
-  balDrCr: string;
+  reading: string | null;
+  units: string | null;
+  rate: number;
+  amount: number;
+  monthlyChg: number;
+  payments: number;
+  debits: number;
+  credits: number;
+  dueAmount: number;
+  dueAmtDrCr: null;
+  balance: string | null;
+  balanceDrCr: string | null;
 };
 
 const BillingChart2 = ({ data }: Props) => {
-  const filteredData = data?.filter((item) => item.transDrCr === "Cr");
   const [showPopup, setShowPopup] = useState(false);
   const [chartType, setChartType] = useState<"area" | "bar">("area");
 
@@ -46,11 +46,11 @@ const BillingChart2 = ({ data }: Props) => {
     if (chartType === "area") {
       return (
         <AreaChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
           <YAxis
             domain={[0, "dataMax + 50"]}
             tick={{ fontSize: 12, fill: "#333" }}
@@ -59,7 +59,7 @@ const BillingChart2 = ({ data }: Props) => {
           <Legend />
           <Area
             type="monotone"
-            dataKey="transAmt"
+            dataKey="amount"
             stroke="#00bfae"
             fill="#b7efc5"
             fillOpacity={0.4}
@@ -69,18 +69,18 @@ const BillingChart2 = ({ data }: Props) => {
     } else {
       return (
         <BarChart
-          data={filteredData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
+          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#333" }} />
           <YAxis
             domain={[0, "dataMax + 50"]}
             tick={{ fontSize: 12, fill: "#333" }}
           />
           <Tooltip />
           <Legend />
-          <Bar dataKey="transAmt" fill="#00bfae" />
+          <Bar dataKey="amount" fill="#00bfae" />
         </BarChart>
       );
     }
@@ -88,7 +88,7 @@ const BillingChart2 = ({ data }: Props) => {
 
   return (
     data &&
-    filteredData.length > 0 && (
+    data.length > 0 && (
       <div className="flex flex-col w-full bg-white m-2 rounded-md shadow-md pb-4">
         {/* Dropdown Selector */}
         <div className="flex justify-end items-center p-2">
@@ -111,7 +111,7 @@ const BillingChart2 = ({ data }: Props) => {
         </div>
 
         {/* Report Button */}
-        <div className="flex justify-center items-center mt-2">
+        {/* <div className="flex justify-center items-center mt-2">
           <CustomButton
             color="bg-[#005f73] hover:bg-green-700"
             icon={<BsBoxArrowUpRight className="h-5 w-5" />}
@@ -121,16 +121,16 @@ const BillingChart2 = ({ data }: Props) => {
           >
             View Report
           </CustomButton>
-        </div>
+        </div> */}
 
         {/* Popup */}
-        {showPopup && (
+        {/* {showPopup && (
           <Popup2
             title="Report Preview"
             message="Here’s your report preview or message..."
             onClose={() => setShowPopup(false)}
           />
-        )}
+        )} */}
       </div>
     )
   );
