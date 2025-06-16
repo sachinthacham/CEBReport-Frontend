@@ -10,9 +10,6 @@ import {
   AreaChart,
   BarChart,
 } from "recharts";
-import Popup2 from "../../../shared/Popup2";
-import CustomButton from "../../../shared/Button";
-import { BsBoxArrowUpRight } from "react-icons/bs";
 import { useState } from "react";
 
 type Props = {
@@ -39,7 +36,6 @@ export type customerTransDetail = {
 };
 
 const BillingChart2 = ({ data }: Props) => {
-  const [showPopup, setShowPopup] = useState(false);
   const [chartType, setChartType] = useState<"area" | "bar">("area");
 
   const renderChart = () => {

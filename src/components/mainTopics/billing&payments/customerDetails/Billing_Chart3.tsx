@@ -116,7 +116,7 @@ const BillingChart3 = ({ data }: Props) => {
         </div>
 
         {/* View Report Button */}
-        <div className="flex justify-center items-center mt-2">
+        {/* <div className="flex justify-center items-center mt-2">
           <CustomButton
             color="bg-[#005f73] hover:bg-green-700"
             icon={<BsBoxArrowUpRight className="h-5 w-5" />}
@@ -126,7 +126,7 @@ const BillingChart3 = ({ data }: Props) => {
           >
             View Report
           </CustomButton>
-        </div>
+        </div> */}
 
         {/* Popup */}
         {showPopup && (

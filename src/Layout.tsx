@@ -21,7 +21,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Fixed Navbar below Top Bar */}
       <div className="fixed top-[48px] left-0 w-full z-40">
-        <Navbar onMenuClick={toggleSidebar} />
+        <Navbar />
       </div>
 
       {/* Mobile Sidebar Toggle Button */}

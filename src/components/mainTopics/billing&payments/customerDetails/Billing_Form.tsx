@@ -83,35 +83,34 @@ const BillingForm = ({ onSubmit }: Props) => {
     <>
       <form
         onSubmit={handleFormSubmit}
-        className="p-4 rounded shadow-md w-full flex flex-row items-end gap-4 bg-white"
+        className="p-3 sm:p-4 rounded shadow-md w-full flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4 bg-white"
       >
         {/* Account Number */}
-        {/* Account Number */}
-        <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal flex items-center gap-1">
-            <MdPermIdentity className="text-blue-500" />
+        <div className="flex flex-col w-full sm:w-1/5">
+          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
+            <MdPermIdentity className="text-blue-500 text-sm sm:text-base" />
             Account Number
           </label>
           <input
             type="text"
             value={acctNo}
             onChange={(e) => setAcctNo(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-3"
+            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base"
             required
             placeholder="Enter account number"
           />
         </div>
 
         {/* From Month */}
-        <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal flex items-center gap-1">
-            <MdDateRange className="text-blue-500" />
+        <div className="flex flex-col w-full sm:w-1/5">
+          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
+            <MdDateRange className="text-blue-500 text-sm sm:text-base" />
             From month
           </label>
           <select
             value={FbillCycle}
             onChange={(e) => setFbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-3 text-gray-600"
+            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base text-gray-600"
             required
             disabled={loading}
           >
@@ -125,15 +124,15 @@ const BillingForm = ({ onSubmit }: Props) => {
         </div>
 
         {/* To Month */}
-        <div className="flex flex-col w-1/5">
-          <label className="text-sm font-normal flex items-center gap-1">
-            <MdDateRange className="text-blue-500" />
+        <div className="flex flex-col w-full sm:w-1/5">
+          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
+            <MdDateRange className="text-blue-500 text-sm sm:text-base" />
             To month
           </label>
           <select
             value={TbillCycle}
             onChange={(e) => setTbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-3 text-gray-600"
+            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base text-gray-600"
             required
             disabled={loading}
           >
@@ -149,14 +148,14 @@ const BillingForm = ({ onSubmit }: Props) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded text-sm w-1/5 h-8"
+          className="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm w-full sm:w-1/5 h-8 hover:bg-blue-700 transition-colors"
         >
           Submit
         </button>
       </form>
 
       {/* Error */}
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {error && <p className="text-red-500 mt-2 text-xs sm:text-sm">{error}</p>}
 
       {/* Popup */}
     </>

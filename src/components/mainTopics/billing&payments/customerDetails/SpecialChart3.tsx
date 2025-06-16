@@ -10,9 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import CustomButton from "../../../shared/Button";
-import { BsBoxArrowUpRight } from "react-icons/bs";
-import Popup3 from "../../../shared/Popup1";
 import { useState } from "react";
 
 type Props = {
@@ -39,7 +36,6 @@ export type customerTransDetail = {
 };
 
 const BillingChart3 = ({ data }: Props) => {
-  const [showPopup, setShowPopup] = useState(false);
   const [chartType, setChartType] = useState<"bar" | "area">("bar");
 
   const renderChart = () => {

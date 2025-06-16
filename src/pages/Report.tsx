@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
 import MaterialMaster from "../mainTopics/inventory/MaterialMaster";
+import { data as sidebarData } from "../data/SideBarData";
 
 type Subtopic = {
   id: number;
@@ -11,9 +12,30 @@ type Subtopic = {
 
 const ReportContent = () => {
   const location = useLocation();
-  const subtopics: Subtopic[] = location.state?.subtopics || [];
+  const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [visibleCard, setVisibleCard] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Get subtopics from location state if available
+    if (location.state?.subtopics) {
+      setSubtopics(location.state.subtopics);
+    } else {
+      // Otherwise, get subtopics from SideBarData based on current path
+      const currentPath = location.pathname;
+      const currentTopic = sidebarData.find(
+        (topic) => topic.path === currentPath
+      );
+      if (currentTopic) {
+        setSubtopics(currentTopic.subtopics);
+        // Auto-expand the first subtopic
+        if (currentTopic.subtopics.length > 0) {
+          setExpandedCard(currentTopic.subtopics[0].id);
+          setVisibleCard(currentTopic.subtopics[0].id);
+        }
+      }
+    }
+  }, [location]);
 
   const toggleCard = (id: number) => {
     if (expandedCard === id) {

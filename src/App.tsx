@@ -1,6 +1,6 @@
 import Reporting from "./pages/Report";
 import LoginPage from "./pages/LoginPage";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./Layout";
@@ -22,6 +22,70 @@ function App() {
         />
         <Route
           path="/report"
+          element={
+            <Layout>
+              <Navigate to="/report/general" replace />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/general"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/billing-payment"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/analysis"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/collections"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/consumption-analysis"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/solar-information"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/pucsl-liss"
+          element={
+            <Layout>
+              <Reporting />
+            </Layout>
+          }
+        />
+        <Route
+          path="/report/inventory"
           element={
             <Layout>
               <Reporting />
