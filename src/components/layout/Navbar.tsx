@@ -2,11 +2,7 @@ import CEBlogo from "../../assets/CEB logo.png";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-interface NavbarProps {
-  onMenuClick: () => void;
-}
-
-const Navbar = ({ onMenuClick }: NavbarProps) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate("/report");

@@ -30,7 +30,7 @@ export const data = [
       { id: 16, name: "Illicit tapping of electricity" },
       { id: 17, name: "Registered consumers for SMS alerts" },
     ],
-    path: "/report",
+    path: "/report/general",
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ export const data = [
       // { id: 21, name: "Payment inquiries" },
       // { id: 22, name: "Customer balance with latest transactions" },
     ],
-    path: "/report",
+    path: "/report/billing-payment",
   },
   {
     id: 3,
@@ -58,7 +58,7 @@ export const data = [
       { id: 29, name: "Financial analysis" },
       { id: 30, name: "Assessed unit analysis" },
     ],
-    path: "/report",
+    path: "/report/analysis",
   },
   {
     id: 4,
@@ -78,7 +78,7 @@ export const data = [
       { id: 41, name: "Unload loan information" },
       { id: 42, name: "Dishonoured cheques" },
     ],
-    path: "/report",
+    path: "/report/collections",
   },
   {
     id: 5,
@@ -93,9 +93,8 @@ export const data = [
       { id: 48, name: "Assessed meter reading details" },
       { id: 49, name: "Zero consumption details" },
     ],
-    path: "/report",
+    path: "/report/consumption-analysis",
   },
-
   {
     id: 6,
     name: "Solar Information",
@@ -117,7 +116,7 @@ export const data = [
       { id: 57, name: "Solar progress clarification – Bulk" },
       { id: 58, name: "Solar customer information" },
     ],
-    path: "/report",
+    path: "/report/solar-information",
   },
   {
     id: 7,
@@ -129,13 +128,13 @@ export const data = [
       { id: 61, name: "PUCSL Reports – solar connections (New)" },
       { id: 62, name: "Solar data for UNT calculation" },
     ],
-    path: "/report",
+    path: "/report/pucsl-liss",
   },
   {
     id: 8,
     name: "Inventory",
     icon: FaBoxes,
     subtopics: [{ id: 59, name: "Ceylon Electricity Board Material Details" }],
-    path: "/report",
+    path: "/report/inventory",
   },
 ];

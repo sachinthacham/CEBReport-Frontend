@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
+
 interface CustomerDetails {
   acctNumber: string;
   name: string;
@@ -29,8 +30,11 @@ interface BulkReportRow {
   balance: number | null;
   balanceDrCr: string | null;
 }
+interface BulkReportingProps {
+  onClose: () => void;
+}
 
-const BulkReporting = () => {
+const BulkReporting = ({ onClose }: BulkReportingProps) => {
   const [rows, setRows] = useState<BulkReportRow[]>([]);
   const [customer, setCustomer] = useState<CustomerDetails | null>(null);
   const [loading, setLoading] = useState(false);
@@ -181,44 +185,56 @@ const BulkReporting = () => {
 
   return (
     <div
-      className="mx-auto p-6 bg-white rounded-lg shadow"
-      style={{ minWidth: 320, maxWidth: "80vw" }}
+      className="mx-auto p-2 sm:p-4 bg-white rounded-lg shadow relative"
+      style={{ width: "100%", maxWidth: "100%" }}
       ref={printRef}
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-purple-700">
+      <button
+        onClick={onClose}
+        className="absolute top-1 right-1 sm:top-2 sm:right-2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+        aria-label="Close"
+      >
+        <span className="text-xl sm:text-2xl font-bold">×</span>
+      </button>
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6 mt-6 sm:mt-8">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700 break-words">
           Billing Details : {customer?.acctNumber}
         </h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button
             onClick={printPDF}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+            className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-red-600 text-white rounded hover:bg-red-700 transition"
           >
             Print PDF
           </button>
           <button
             onClick={downloadAsCSV}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+            className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-green-600 text-white rounded hover:bg-green-700 transition"
           >
             Download Excel
           </button>
         </div>
       </div>
 
-      {loading && <div className="text-blue-600">Loading...</div>}
-      {error && <div className="text-red-600">{error}</div>}
+      {loading && (
+        <div className="text-blue-600 text-sm sm:text-base">Loading...</div>
+      )}
+      {error && (
+        <div className="text-red-600 text-sm sm:text-base">{error}</div>
+      )}
 
       {/* Customer Details */}
       {customer && (
-        <div className="mb-6 p-4 bg-gray-50 rounded border border-gray-200">
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded border border-gray-200">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
+            <div className="break-words">
               <strong>Account Number:</strong> {customer.acctNumber}
             </div>
-            <div>
+            <div className="break-words">
               <strong>Name:</strong> {customer.name}
             </div>
-            <div>
+            <div className="break-words">
               <strong>Address:</strong> {customer.address}
             </div>
             <div>
@@ -242,89 +258,129 @@ const BulkReporting = () => {
 
       {/* Transaction Table */}
       {rows.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 rounded">
-            <thead className="bg-purple-100">
-              <tr>
-                <th className="px-4 py-2 border-b">Bill Month</th>
-                <th className="px-4 py-2 border-b">Year</th>
-                <th className="px-4 py-2 border-b">TXN/Read Date</th>
-                <th className="px-4 py-2 border-b">Trans. Description</th>
-                <th className="px-4 py-2 border-b">Current Reading</th>
-                <th className="px-4 py-2 border-b">Total Units</th>
-                <th className="px-4 py-2 border-b">Rate</th>
-                <th className="px-4 py-2 border-b">Amount</th>
-                <th className="px-4 py-2 border-b">Total Monthly Charge</th>
-                <th className="px-4 py-2 border-b">Payment</th>
-                <th className="px-4 py-2 border-b">Debits</th>
-                <th className="px-4 py-2 border-b">Credits</th>
-                <th className="px-4 py-2 border-b">Total Amount Due</th>
-                <th className="px-4 py-2 border-b">Due Dr/Cr</th>
-                <th className="px-4 py-2 border-b">Balance</th>
-                <th className="px-4 py-2 border-b">Balance Dr/Cr</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, idx) => (
-                <tr
-                  key={idx}
-                  className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.billCycle)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.year)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.transDate)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.transType)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.reading)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.units)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.rate)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.amount)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.monthlyChg)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.payments)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.debits)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.credits)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.dueAmount)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.dueAmtDrCr)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.balance)}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {displayCell(row.balanceDrCr)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="overflow-x-auto rounded-lg border border-gray-300">
+          <div className="min-w-full inline-block align-middle">
+            <div className="overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-purple-100">
+                  <tr>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Bill Month
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Year
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      TXN/Read Date
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Trans. Description
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Current Reading
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Total Units
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Rate
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Amount
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Monthly Charge
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Payment
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Debits
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Credits
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Amount Due
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Due Dr/Cr
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Balance
+                    </th>
+                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      Balance Dr/Cr
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {rows.map((row, idx) => (
+                    <tr
+                      key={idx}
+                      className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    >
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.billCycle)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.year)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.transDate)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.transType)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.reading)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.units)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.rate)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.amount)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.monthlyChg)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.payments)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.debits)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.credits)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.dueAmount)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.dueAmtDrCr)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.balance)}
+                      </td>
+                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {displayCell(row.balanceDrCr)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       ) : (
-        !loading && <div className="text-gray-600">No data found.</div>
+        !loading && (
+          <div className="text-gray-600 text-sm sm:text-base">
+            No data found.
+          </div>
+        )
       )}
     </div>
   );
