@@ -115,19 +115,6 @@ const BillingChart3 = ({ data }: Props) => {
           </ResponsiveContainer>
         </div>
 
-        {/* View Report Button */}
-        {/* <div className="flex justify-center items-center mt-2">
-          <CustomButton
-            color="bg-[#005f73] hover:bg-green-700"
-            icon={<BsBoxArrowUpRight className="h-5 w-5" />}
-            width="w-1/2"
-            height="h-8"
-            onClick={() => setShowPopup(true)}
-          >
-            View Report
-          </CustomButton>
-        </div> */}
-
         {/* Popup */}
         {showPopup && (
           <Popup
