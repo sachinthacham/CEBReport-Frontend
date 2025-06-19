@@ -5,7 +5,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useLogged } from "../../contexts/UserLoggedStateContext";
 import { postJSON } from "../../helpers/LoginHelper";
 import InputField from "../shared/InputField";
-import ceb from "../../assets/CEB logo.png";
+import ceb from "../../assets/CEBLOGO.png";
 
 const LoginCard = () => {
   const { setLogged } = useLogged();
@@ -29,7 +29,7 @@ const LoginCard = () => {
 
       if (IsLogged?.Logged) {
         toast.success("Login successful!", { autoClose: 2000 });
-        navigate("/report");
+        navigate("/report/general");
 
         const userData = await postJSON("/CBRSAPI/CBRSEPFNOLogin", {
           Username: username,
