@@ -46,7 +46,7 @@ const UserNavBar = () => {
     >
       <FaUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
       <div
-        className="text-white text-xs sm:text-sm cursor-pointer hover:text-gray-200 transition-colors"
+        className="text-white text-xs sm:text-xs cursor-pointer hover:text-gray-200 transition-colors"
         onClick={handleToggle}
       >
         {user.Name}

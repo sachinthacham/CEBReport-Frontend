@@ -53,7 +53,7 @@ const Analysis = () => {
   return (
     <div className="flex flex-col gap-4 pt-5">
       {subtopics.map((subtopic) => (
-        <div key={subtopic.id} className="rounded-lg shadow-md w-5/6">
+        <div key={subtopic.id} className="rounded-lg shadow-md w-11/12">
           {/* Card Header */}
           <div
             className="relative px-4 py-2.5 cursor-pointer flex items-center transition-all duration-200 bg-gradient-to-r from-[#800000]/5 via-[#800000]/3 to-transparent hover:from-[#800000]/8 hover:via-[#800000]/5 hover:to-transparent"

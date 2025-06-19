@@ -1,24 +1,26 @@
-// src/pages/General.jsx
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
 import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
+import { Outlet } from "react-router-dom";
 
 type Subtopic = {
   id: number;
   name: string;
 };
 
-const General = () => {
+const BillingPayment = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
-    // Get General topic's subtopics directly from sidebarData
-    const generalTopic = sidebarData.find((topic) => topic.name === "General");
-    if (generalTopic) {
-      setSubtopics(generalTopic.subtopics);
+    // Get Billing & Payment topic's subtopics directly from sidebarData
+    const billingTopic = sidebarData.find(
+      (topic) => topic.name === "Billing & Payment"
+    );
+    if (billingTopic) {
+      setSubtopics(billingTopic.subtopics);
     }
   }, []);
 
@@ -33,10 +35,17 @@ const General = () => {
   };
 
   const renderSubtopicContent = (subtopicName: string) => {
-    switch (subtopicName.toLowerCase()) {
-      case "customer information":
+    switch (subtopicName) {
+      case "Customer Information":
         return <CustomerDetails />;
-
+      case "billing details":
+        return <div>Billing Details Content</div>;
+      case "payment history":
+        return <div>Payment History Content</div>;
+      case "payment methods":
+        return <div>Payment Methods Content</div>;
+      case "billing schedule":
+        return <div>Billing Schedule Content</div>;
       default:
         return (
           <div className="text-red-500 text-xs">
@@ -82,8 +91,9 @@ const General = () => {
           </div>
         </div>
       ))}
+      <Outlet />
     </div>
   );
 };
 
-export default General;
+export default BillingPayment;

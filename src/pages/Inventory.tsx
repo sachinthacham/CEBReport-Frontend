@@ -1,24 +1,25 @@
-// src/pages/General.jsx
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
-import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
+import MaterialMaster from "../mainTopics/inventory/MaterialMaster";
 
 type Subtopic = {
   id: number;
   name: string;
 };
 
-const General = () => {
+const Inventory = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
-    // Get General topic's subtopics directly from sidebarData
-    const generalTopic = sidebarData.find((topic) => topic.name === "General");
-    if (generalTopic) {
-      setSubtopics(generalTopic.subtopics);
+    // Get Inventory topic's subtopics directly from sidebarData
+    const inventoryTopic = sidebarData.find(
+      (topic) => topic.name === "Inventory"
+    );
+    if (inventoryTopic) {
+      setSubtopics(inventoryTopic.subtopics);
     }
   }, []);
 
@@ -33,10 +34,21 @@ const General = () => {
   };
 
   const renderSubtopicContent = (subtopicName: string) => {
-    switch (subtopicName.toLowerCase()) {
-      case "customer information":
-        return <CustomerDetails />;
-
+    switch (subtopicName) {
+      case "Ceylon Electricity Board Material Details":
+        return <MaterialMaster />;
+      case "inventory items":
+        return <div>Inventory Items Content</div>;
+      case "inventory movement":
+        return <div>Inventory Movement Content</div>;
+      case "inventory reports":
+        return <div>Inventory Reports Content</div>;
+      case "inventory alerts":
+        return <div>Inventory Alerts Content</div>;
+      case "inventory history":
+        return <div>Inventory History Content</div>;
+      case "inventory categories":
+        return <div>Inventory Categories Content</div>;
       default:
         return (
           <div className="text-red-500 text-xs">
@@ -86,4 +98,4 @@ const General = () => {
   );
 };
 
-export default General;
+export default Inventory;

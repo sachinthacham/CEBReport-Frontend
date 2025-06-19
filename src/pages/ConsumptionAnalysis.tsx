@@ -1,24 +1,24 @@
-// src/pages/General.jsx
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
-import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
 
 type Subtopic = {
   id: number;
   name: string;
 };
 
-const General = () => {
+const ConsumptionAnalysis = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
-    // Get General topic's subtopics directly from sidebarData
-    const generalTopic = sidebarData.find((topic) => topic.name === "General");
-    if (generalTopic) {
-      setSubtopics(generalTopic.subtopics);
+    // Get Consumption analysis topic's subtopics directly from sidebarData
+    const consumptionTopic = sidebarData.find(
+      (topic) => topic.name === "Consumption analysis"
+    );
+    if (consumptionTopic) {
+      setSubtopics(consumptionTopic.subtopics);
     }
   }, []);
 
@@ -34,9 +34,18 @@ const General = () => {
 
   const renderSubtopicContent = (subtopicName: string) => {
     switch (subtopicName.toLowerCase()) {
-      case "customer information":
-        return <CustomerDetails />;
-
+      case "daily consumption":
+        return <div>Daily Consumption Analysis Content</div>;
+      case "monthly consumption":
+        return <div>Monthly Consumption Analysis Content</div>;
+      case "yearly consumption":
+        return <div>Yearly Consumption Analysis Content</div>;
+      case "consumption trends":
+        return <div>Consumption Trends Analysis Content</div>;
+      case "consumption comparison":
+        return <div>Consumption Comparison Analysis Content</div>;
+      case "peak hour analysis":
+        return <div>Peak Hour Analysis Content</div>;
       default:
         return (
           <div className="text-red-500 text-xs">
@@ -86,4 +95,4 @@ const General = () => {
   );
 };
 
-export default General;
+export default ConsumptionAnalysis;

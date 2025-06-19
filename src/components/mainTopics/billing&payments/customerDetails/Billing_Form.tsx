@@ -83,34 +83,34 @@ const BillingForm = ({ onSubmit }: Props) => {
     <>
       <form
         onSubmit={handleFormSubmit}
-        className="p-3 sm:p-4 rounded shadow-md w-full flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4 bg-white"
+        className="p-4 rounded-lg shadow-sm border border-gray-100 w-full flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-4 bg-white"
       >
         {/* Account Number */}
-        <div className="flex flex-col w-full sm:w-1/5">
-          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
-            <MdPermIdentity className="text-blue-500 text-sm sm:text-base" />
+        <div className="flex flex-col w-full sm:w-[28%]">
+          <label className="text-xs  text-gray-600 flex items-center gap-1.5 mb-1">
+            <MdPermIdentity className="text-[#800000] text-sm" />
             Account Number
           </label>
           <input
             type="text"
             value={acctNo}
             onChange={(e) => setAcctNo(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base"
+            className="rounded-md bg-gray-50 h-8 px-3 text-xs border border-gray-200 focus:border-[#800000] focus:ring-1 focus:ring-[#800000] outline-none transition-colors"
             required
             placeholder="Enter account number"
           />
         </div>
 
         {/* From Month */}
-        <div className="flex flex-col w-full sm:w-1/5">
-          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
-            <MdDateRange className="text-blue-500 text-sm sm:text-base" />
+        <div className="flex flex-col w-full sm:w-[28%]">
+          <label className="text-xs  text-gray-600 flex items-center gap-1.5 mb-1">
+            <MdDateRange className="text-[#800000] text-sm" />
             From month
           </label>
           <select
             value={FbillCycle}
             onChange={(e) => setFbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base text-gray-600"
+            className="rounded-md bg-gray-50 h-8 px-3 text-xs border border-gray-200 focus:border-[#800000] focus:ring-1 focus:ring-[#800000] outline-none transition-colors text-gray-700"
             required
             disabled={loading}
           >
@@ -124,15 +124,15 @@ const BillingForm = ({ onSubmit }: Props) => {
         </div>
 
         {/* To Month */}
-        <div className="flex flex-col w-full sm:w-1/5">
-          <label className="text-xs sm:text-sm font-normal flex items-center gap-1">
-            <MdDateRange className="text-blue-500 text-sm sm:text-base" />
+        <div className="flex flex-col w-full sm:w-[28%]">
+          <label className="text-xs text-gray-600 flex items-center gap-1.5 mb-1">
+            <MdDateRange className="text-[#800000] text-sm" />
             To month
           </label>
           <select
             value={TbillCycle}
             onChange={(e) => setTbillCycle(e.target.value)}
-            className="mt-1 rounded bg-gray-100 h-8 px-2 sm:px-3 text-sm sm:text-base text-gray-600"
+            className="rounded-md bg-gray-50 h-8 px-3 text-xs border border-gray-200 focus:border-[#800000] focus:ring-1 focus:ring-[#800000] outline-none transition-colors text-gray-700"
             required
             disabled={loading}
           >
@@ -148,14 +148,14 @@ const BillingForm = ({ onSubmit }: Props) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm w-full sm:w-1/5 h-8 hover:bg-blue-700 transition-colors"
+          className="bg-[#800000] text-white px-4 py-2 rounded-md text-xs font-medium w-full sm:w-[12%] h-8 hover:bg-[#800000]/90 transition-colors focus:ring-2 focus:ring-[#800000]/20 focus:outline-none"
         >
           Submit
         </button>
       </form>
 
       {/* Error */}
-      {error && <p className="text-red-500 mt-2 text-xs sm:text-sm">{error}</p>}
+      {error && <p className="text-red-500 mt-2 text-xs">{error}</p>}
 
       {/* Popup */}
     </>

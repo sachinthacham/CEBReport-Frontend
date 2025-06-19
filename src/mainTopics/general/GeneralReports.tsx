@@ -1,16 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
-import MaterialMaster from "../mainTopics/inventory/MaterialMaster";
-import { data as sidebarData } from "../data/SideBarData";
+import { data as sidebarData } from "../../data/SideBarData";
 
-type Subtopic = {
+interface Subtopic {
   id: number;
   name: string;
-};
+}
 
-const ReportContent = () => {
+const GeneralReports: React.FC = () => {
   const location = useLocation();
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -48,36 +45,23 @@ const ReportContent = () => {
   };
 
   const renderCardContent = (name: string) => {
-    switch (name) {
-      case "Customer information":
-        return <CustomerDetails />;
-      case "Ceylon Electricity Board Material Details":
-        return <MaterialMaster />;
-      default:
-        return <p className="p-4">No content available.</p>;
-    }
+    // Here you would render different components based on the subtopic name
+    return <div className="p-4">Content for {name}</div>;
   };
 
   return (
     <div className="flex flex-col gap-4 pt-5">
       {subtopics.map((subtopic) => (
         <div key={subtopic.id} className="rounded-lg shadow-md">
-          {/* Card Header */}
           <div
             className="p-4 cursor-pointer hover:bg-gray-100 bg-white"
             onClick={() => toggleCard(subtopic.id)}
           >
             <div className="flex items-center gap-2">
-              <ChevronDownIcon
-                className={`h-5 w-5 text-gray-600 transition-transform duration-300 ${
-                  expandedCard === subtopic.id ? "rotate-180" : ""
-                }`}
-              />
               <h3 className="text-sm">{subtopic.name}</h3>
             </div>
           </div>
 
-          {/* Expandable Content */}
           <div
             className={`overflow-hidden transition-[max-height] duration-1000 ease-in-out bg-[#f8f9fa] ${
               expandedCard === subtopic.id ? "max-h-[1000px]" : "max-h-0"
@@ -91,4 +75,4 @@ const ReportContent = () => {
   );
 };
 
-export default ReportContent;
+export default GeneralReports;

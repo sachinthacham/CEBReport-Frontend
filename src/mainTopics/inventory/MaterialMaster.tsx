@@ -11,14 +11,17 @@ interface MaterialMasterProps {
 }
 
 const MaterialMaster: React.FC<MaterialMasterProps> = ({
-  title = "Material Master",
+  title = "Material Details",
 }) => {
   const [materials, setMaterials] = useState<Material[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermName, setSearchTermName] = useState("");
+  const [searchTermCode, setSearchTermCode] = useState("");
   const [filteredMaterials, setFilteredMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 50;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,12 +30,23 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
       setError(null);
 
       try {
-        const response = await fetch("misapi/api/materials");
+        const response = await fetch("/misapi/api/materials");
+        const text = await response.text();
+        console.log("API raw response:", text);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result = await response.json();
-        const data: Material[] = result.data || [];
+        let data: Material[] = [];
+        try {
+          const result = JSON.parse(text);
+          if (Array.isArray(result)) {
+            data = result;
+          } else if (result.data && Array.isArray(result.data)) {
+            data = result.data;
+          }
+        } catch (e) {
+          throw new Error("Response is not valid JSON.");
+        }
         setMaterials(data);
         setFilteredMaterials(data);
         setLastUpdated(new Date());
@@ -49,18 +63,46 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (searchTermName.trim() === "" && searchTermCode.trim() === "") {
       setFilteredMaterials(materials);
     } else {
-      const filtered = materials.filter((material) =>
-        material.MatNm.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const filtered = materials.filter((material) => {
+        const nameMatch =
+          searchTermName.trim() === "" ||
+          material.MatNm.toLowerCase().includes(searchTermName.toLowerCase());
+        const codeMatch =
+          searchTermCode.trim() === "" ||
+          material.MatCd.toLowerCase().includes(searchTermCode.toLowerCase());
+        return nameMatch && codeMatch;
+      });
       setFilteredMaterials(filtered);
     }
-  }, [searchTerm, materials]);
+  }, [searchTermName, searchTermCode, materials]);
+
+  // Calculate paginated materials
+  const paginatedMaterials = filteredMaterials.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  // Update page if filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredMaterials]);
+
+  const clearAllFilters = () => {
+    setSearchTermName("");
+    setSearchTermCode("");
+  };
 
   const handleView = (matCd: string) => {
-    navigate(`/material-details/${matCd}`);
+    console.log("handleView called with matCd:", matCd);
+    console.log("Current location:", window.location.href);
+    navigate(`/report/inventory/material-details/${matCd}`);
+    console.log(
+      "Navigation attempted to:",
+      `/report/inventory/material-details/${matCd}`
+    );
   };
 
   if (loading) {
@@ -92,14 +134,30 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
         )}
       </div>
 
-      <div className="flex justify-end mb-3">
+      <div className="flex justify-end items-center gap-2 mb-3">
+        <input
+          type="text"
+          placeholder="Search by Material Code..."
+          value={searchTermCode}
+          onChange={(e) => setSearchTermCode(e.target.value)}
+          className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-purple-500 transition w-48"
+        />
         <input
           type="text"
           placeholder="Search by Material Name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTermName}
+          onChange={(e) => setSearchTermName(e.target.value)}
           className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-purple-500 transition w-48"
         />
+        {(searchTermName || searchTermCode) && (
+          <button
+            onClick={clearAllFilters}
+            className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded transition-colors"
+            title="Clear all filters"
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       {filteredMaterials.length === 0 ? (
@@ -124,7 +182,7 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {filteredMaterials.map((material, idx) => (
+                {paginatedMaterials.map((material, idx) => (
                   <tr
                     key={idx}
                     className="hover:bg-purple-50 transition-colors border-b"
@@ -137,7 +195,13 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
                     </td>
                     <td className="w-1/4 px-4 py-3 text-center">
                       <button
-                        onClick={() => handleView(material.MatCd)}
+                        onClick={() => {
+                          console.log(
+                            "View button clicked for matCd:",
+                            material.MatCd
+                          );
+                          handleView(material.MatCd);
+                        }}
                         className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-md shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 min-w-[70px]"
                       >
                         <svg
@@ -169,6 +233,28 @@ const MaterialMaster: React.FC<MaterialMasterProps> = ({
           </div>
         </div>
       )}
+
+      <div className="flex justify-end items-center gap-2 mt-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-2 py-1 text-xs bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="text-xs">
+          Page {currentPage} of {Math.ceil(filteredMaterials.length / pageSize)}
+        </span>
+        <button
+          disabled={
+            currentPage === Math.ceil(filteredMaterials.length / pageSize)
+          }
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-2 py-1 text-xs bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
