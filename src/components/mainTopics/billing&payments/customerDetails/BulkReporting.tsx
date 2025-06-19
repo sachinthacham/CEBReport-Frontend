@@ -117,6 +117,7 @@ const BulkReporting = () => {
         setRows(mappedRows);
       } catch (err: any) {
         setError(err.message || "Failed to fetch data");
+        console.log(error);
       } finally {
         setLoading(false);
       }

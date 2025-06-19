@@ -11,7 +11,6 @@ type Subtopic = {
 const Inventory = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
     // Get Inventory topic's subtopics directly from sidebarData
@@ -26,10 +25,8 @@ const Inventory = () => {
   const toggleCard = (id: number) => {
     if (expandedCard === id) {
       setExpandedCard(null);
-      setVisibleCard(null);
     } else {
       setExpandedCard(id);
-      setVisibleCard(id);
     }
   };
 
