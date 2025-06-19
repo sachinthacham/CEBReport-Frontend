@@ -2,6 +2,19 @@ import { useEffect, useState, useRef } from "react";
 import { postJSON } from "../../../../helpers/LoginHelper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
+import {
+  FaArrowLeft,
+  FaFileDownload,
+  FaPrint,
+  FaUserCircle,
+  FaMapMarkerAlt,
+  FaHome,
+  FaBolt,
+  FaListOl,
+  FaCalendarAlt,
+  FaBalanceScale,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface Transaction {
   billCycle: string;
@@ -40,6 +53,7 @@ const ReadingHistoryReport = () => {
   const { acctNo, FbillCycle, TbillCycle } = useSelector(
     (state: RootState) => state.billing
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!acctNo || FbillCycle === undefined || TbillCycle === undefined) {
@@ -176,121 +190,183 @@ const ReadingHistoryReport = () => {
 
   return (
     <div
-      className="mx-auto p-6 bg-white rounded-lg shadow"
+      className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow border border-gray-100"
       ref={printRef}
       style={{ minWidth: 320, maxWidth: "80vw" }}
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-purple-700">
-          Reading History - Account: {data.accountNumber}
-        </h2>
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/report/billing-payment")}
+        className="mb-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded hover:bg-gray-200 transition border border-gray-200"
+      >
+        <FaArrowLeft className="w-3 h-3" />
+        Back to Charts
+      </button>
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 border-b border-gray-100 pb-2">
+        <div className="flex items-center gap-2 mb-2 md:mb-0">
+          <FaListOl className="w-5 h-5 text-gray-400" />
+          <h2 className="text-lg md:text-xl font-semibold text-gray-800 tracking-tight">
+            Reading History
+          </h2>
+          <span className="ml-2 text-xs text-gray-500 font-normal">
+            Account:{" "}
+            <span className="text-gray-700 font-semibold">
+              {data.accountNumber}
+            </span>
+          </span>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={printPDF}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded border border-gray-200 hover:bg-gray-200 transition"
           >
-            Print PDF
+            <FaPrint className="w-3 h-3" /> Print PDF
           </button>
           <button
             onClick={downloadAsCSV}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded border border-gray-200 hover:bg-gray-200 transition"
           >
-            Download Excel
+            <FaFileDownload className="w-3 h-3" /> Download Excel
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 mt-3">
-        <div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">
-              Account Number:
-            </div>
-            <div className="text-gray-900">{data.accountNumber}</div>
+      {/* Details Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 mt-2">
+        <div className="bg-gray-50 rounded p-3 shadow-sm flex flex-col gap-1.5 text-xs">
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaUserCircle className="text-gray-300 w-4 h-4" />
+            Name: <span className="font-normal text-gray-800">{data.name}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Name:</div>
-            <div className="text-gray-900">{data.name}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaBalanceScale className="text-gray-300 w-4 h-4" />
+            Tariff:{" "}
+            <span className="font-normal text-gray-800">{data.tariff}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Tariff:</div>
-            <div className="text-gray-900">{data.tariff}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaListOl className="text-gray-300 w-4 h-4" />
+            Walk Order:{" "}
+            <span className="font-normal text-gray-800">{data.wlkOdr}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Walk Order:</div>
-            <div className="text-gray-900">{data.wlkOdr}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaHome className="text-gray-300 w-4 h-4" />
+            Address:{" "}
+            <span className="font-normal text-gray-800">{data.address}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Address:</div>
-            <div className="text-gray-900">{data.address}</div>
-          </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Date:</div>
-            <div className="text-gray-900">{data.date}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaCalendarAlt className="text-gray-300 w-4 h-4" />
+            Date: <span className="font-normal text-gray-800">{data.date}</span>
           </div>
         </div>
-        <div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Province:</div>
-            <div className="text-gray-900">{data.province}</div>
+        <div className="bg-gray-50 rounded p-3 shadow-sm flex flex-col gap-1.5 text-xs">
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaMapMarkerAlt className="text-gray-300 w-4 h-4" />
+            Province:{" "}
+            <span className="font-normal text-gray-800">{data.province}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Area:</div>
-            <div className="text-gray-900">{data.area}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaBolt className="text-gray-300 w-4 h-4" />
+            Area: <span className="font-normal text-gray-800">{data.area}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Meter 1:</div>
-            <div className="text-gray-900">{data.met1}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <span className="text-gray-300 font-bold w-4 h-4">M1</span>
+            Meter 1:{" "}
+            <span className="font-normal text-gray-800">{data.met1}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Meter 2:</div>
-            <div className="text-gray-900">{data.met2}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <span className="text-gray-300 font-bold w-4 h-4">M2</span>
+            Meter 2:{" "}
+            <span className="font-normal text-gray-800">{data.met2}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Meter 3:</div>
-            <div className="text-gray-900">{data.met3}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <span className="text-gray-300 font-bold w-4 h-4">M3</span>
+            Meter 3:{" "}
+            <span className="font-normal text-gray-800">{data.met3}</span>
           </div>
-          <div className="flex mb-2">
-            <div className="text-gray-700 font-semibold mr-2">Net Type:</div>
-            <div className="text-gray-900">{data.netType}</div>
+          <div className="flex items-center gap-1 text-gray-700 font-medium">
+            <FaBolt className="text-gray-300 w-4 h-4" />
+            Net Type:{" "}
+            <span className="font-normal text-gray-800">{data.netType}</span>
           </div>
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">Transactions</h3>
+      <h3 className="text-base font-semibold text-gray-700 mb-2 flex items-center gap-1">
+        <FaListOl className="text-gray-400 w-4 h-4" /> Reading Records
+      </h3>
       {data.transactions.length === 0 ? (
-        <p className="text-gray-600">No transactions found.</p>
+        <p className="text-gray-500 text-xs">No readings found.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 rounded">
-            <thead className="bg-purple-100">
+          <table className="min-w-full border border-gray-200 rounded shadow-sm overflow-hidden text-xs">
+            <thead className="bg-gray-100 sticky top-0 z-10">
               <tr>
-                <th className="px-4 py-2 border-b text-left">Bill Cycle</th>
-                <th className="px-4 py-2 border-b text-left">Bill Month</th>
-                <th className="px-4 py-2 border-b text-left">Reading Date</th>
-                <th className="px-4 py-2 border-b text-left">Meter 1</th>
-                <th className="px-4 py-2 border-b text-left">Meter 2</th>
-                <th className="px-4 py-2 border-b text-left">Meter 3</th>
-                <th className="px-4 py-2 border-b text-right">Consumption</th>
-                <th className="px-4 py-2 border-b text-right">Days</th>
-                <th className="px-4 py-2 border-b text-right">Charge</th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Bill Cycle
+                </th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Bill Month
+                </th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Reading Date
+                </th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Meter 1
+                </th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Meter 2
+                </th>
+                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
+                  Meter 3
+                </th>
+                <th className="px-3 py-2 border-b text-right font-medium text-gray-700">
+                  Consumption
+                </th>
+                <th className="px-3 py-2 border-b text-right font-medium text-gray-700">
+                  Days
+                </th>
+                <th className="px-3 py-2 border-b text-right font-medium text-gray-700">
+                  Charge
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.transactions.map((t, idx) => (
                 <tr
                   key={idx}
-                  className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                  className={
+                    idx % 2 === 0
+                      ? "bg-white hover:bg-gray-50 transition"
+                      : "bg-gray-50 hover:bg-gray-100 transition"
+                  }
                 >
-                  <td className="px-4 py-2 border-b">{t.billCycle}</td>
-                  <td className="px-4 py-2 border-b">{t.year}</td>
-                  <td className="px-4 py-2 border-b">{t.readDate}</td>
-                  <td className="px-4 py-2 border-b">{t.readMet1}</td>
-                  <td className="px-4 py-2 border-b">{t.readMet2}</td>
-                  <td className="px-4 py-2 border-b">{t.readMet3}</td>
-                  <td className="px-4 py-2 border-b text-right">{t.units}</td>
-                  <td className="px-4 py-2 border-b text-right">{t.days}</td>
-                  <td className="px-4 py-2 border-b text-right">{t.kwh}</td>
+                  <td className="px-3 py-2 border-b text-gray-700">
+                    {t.billCycle}
+                  </td>
+                  <td className="px-3 py-2 border-b text-gray-700">{t.year}</td>
+                  <td className="px-3 py-2 border-b text-gray-700">
+                    {t.readDate}
+                  </td>
+                  <td className="px-3 py-2 border-b text-gray-700">
+                    {t.readMet1}
+                  </td>
+                  <td className="px-3 py-2 border-b text-gray-700">
+                    {t.readMet2}
+                  </td>
+                  <td className="px-3 py-2 border-b text-gray-700">
+                    {t.readMet3}
+                  </td>
+                  <td className="px-3 py-2 border-b text-right text-gray-800 font-medium">
+                    {t.units}
+                  </td>
+                  <td className="px-3 py-2 border-b text-right text-gray-800 font-medium">
+                    {t.days}
+                  </td>
+                  <td className="px-3 py-2 border-b text-right text-gray-800 font-medium">
+                    {t.kwh}
+                  </td>
                 </tr>
               ))}
             </tbody>

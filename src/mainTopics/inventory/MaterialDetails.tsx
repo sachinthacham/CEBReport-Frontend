@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   PieChart,
   Pie,
@@ -12,6 +12,13 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import {
+  FaPrint,
+  FaDownload,
+  FaArrowLeft,
+  FaListOl,
+  FaCubes,
+} from "react-icons/fa";
 
 type MaterialStock = {
   ErrorMessage: string | null;
@@ -134,6 +141,7 @@ const MaterialDetails: React.FC = () => {
   >("bar");
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   //get material details by matCd on region wise
   useEffect(() => {
     const fetchMaterial = async () => {
@@ -333,417 +341,453 @@ const MaterialDetails: React.FC = () => {
 
   return (
     <div
-      className="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 bg-white rounded shadow font-sans"
+      className="max-w-5xl mx-auto p-4 bg-white rounded-lg shadow border border-gray-100 text-[11px] font-sans"
       ref={printRef}
     >
-      {/* Debug info - remove this after fixing */}
-      <div className="mb-4 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs">
-        Debug: MaterialDetails component is rendering. matCd: {matCd}
-      </div>
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/report/inventory")}
+        className="mb-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded hover:bg-gray-200 transition border border-gray-200"
+      >
+        <FaArrowLeft className="w-3 h-3" />
+        Back to Inventory
+      </button>
 
-      <div className="mb-6 text-center">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-600">
-          Material Details Dashboard
-        </h2>
+      {/* heading */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 bg-gradient-to-r from-gray-50 to-white rounded-lg shadow-sm border border-gray-100 px-6 py-4 mb-2">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 border border-blue-100 shadow-sm mr-3">
+            <FaCubes className="w-5 h-5 text-blue-500" />
+          </div>
+          <div className="flex flex-col flex-1 min-w-0">
+            <h1 className="text-lg font-normal text-gray-800 tracking-tight leading-tight mb-0.5">
+              Material Details Dashboard
+            </h1>
+            <div className="text-xs text-gray-500 font-medium truncate">
+              {matCd && (
+                <span className="mr-2">
+                  Material Code:{" "}
+                  <span className="text-gray-700 font-semibold">{matCd}</span>
+                </span>
+              )}
+              {materialName && (
+                <span className="mr-2">
+                  | Name:{" "}
+                  <span className="text-gray-700 font-semibold">
+                    {materialName}
+                  </span>
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* AllCharts Section */}
       {materials.length > 0 || provinceStocks.length > 0 ? (
-        <div className="bg-gray-50 p-2 sm:p-4 rounded shadow relative min-h-[350px] flex flex-col md:flex-row justify-between gap-6 mb-8">
-          {/* Region-wise Chart */}
-          <div className="w-full md:w-[48%] h-[350px] relative mb-8 md:mb-0">
-            <div className="absolute top-2 left-2 right-20 z-10">
-              <h3 className="text-xs font-medium text-gray-600 bg-white px-2 py-1 rounded shadow-sm border leading-tight">
-                Division Wise Quantity on Hand - {matCd}{" "}
-                {materialName ? `: ${materialName}` : ""}
-              </h3>
-            </div>
-            <div className="absolute top-2 right-2 z-10">
-              <select
-                value={chartType}
-                onChange={(e) =>
-                  setChartType(e.target.value as "donut" | "bar" | "pie")
-                }
-                className="px-2 py-1 text-xs bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="donut">Donut</option>
-                <option value="bar">Bar</option>
-                <option value="pie">Pie</option>
-              </select>
-            </div>
-            {allMaterialsZero ? (
-              <div className="flex items-center justify-center h-full text-red-500 font-semibold text-base">
-                There is no material in stock for this material (Region Wise).
+        <div className="flex flex-col md:flex-row gap-6 mb-8">
+          {/* Region-wise Chart + Details */}
+          <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-4">
+            {/* Chart Card */}
+            <div className="flex-1 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 flex flex-col min-h-[420px] relative">
+              <div className="flex justify-between items-center mb-3 pb-1 border-b border-gray-100">
+                <h3 className="text-[13px] font-semibold text-gray-700 tracking-tight flex items-center gap-2">
+                  Region Quantity On Hand
+                </h3>
+                <select
+                  value={chartType}
+                  onChange={(e) =>
+                    setChartType(e.target.value as "donut" | "bar" | "pie")
+                  }
+                  className="px-2 py-1 text-xs bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                >
+                  <option value="donut">Donut</option>
+                  <option value="bar">Bar</option>
+                  <option value="pie">Pie</option>
+                </select>
               </div>
-            ) : materials.length > 0 ? (
-              <div className="pt-8 h-full flex flex-col sm:flex-row">
-                {/* Donut Chart reagion wise */}
-                <div className="w-full sm:w-[65%] h-full">
-                  {chartType === "donut" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={materials}
-                          dataKey="QtyOnHand"
-                          nameKey="Region"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={110}
-                          paddingAngle={0}
-                          cornerRadius={0}
-                          onClick={handleRegionClick}
-                        >
-                          {materials.map((_, index) => (
-                            <Cell
-                              key={`donut-${index}`}
-                              fill={REGION_COLORS[index % REGION_COLORS.length]}
-                              stroke={
-                                selectedRegion ===
-                                mapRegionName(materials[index].Region)
-                                  ? "#000"
-                                  : "#fff"
-                              }
-                              strokeWidth={
-                                selectedRegion ===
-                                mapRegionName(materials[index].Region)
-                                  ? 2
-                                  : 1
-                              }
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip content={renderCustomTooltip} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                  {/* bar Chart reagion wise */}
-                  {chartType === "bar" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={materials}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        onClick={handleRegionClick}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                          dataKey="Region"
-                          tickFormatter={(value) => mapRegionName(value)}
-                          fontSize={11}
-                        />
-                        <YAxis fontSize={11} />
-                        <Tooltip content={renderCustomTooltip} />
-                        <Bar
-                          dataKey="QtyOnHand"
-                          fill="#1E40AF"
-                          radius={[4, 4, 0, 0]}
-                          onClick={handleRegionClick}
-                        >
-                          {materials.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={REGION_COLORS[index % REGION_COLORS.length]}
-                              stroke={
-                                selectedRegion === mapRegionName(entry.Region)
-                                  ? "#000"
-                                  : "#fff"
-                              }
-                              strokeWidth={
-                                selectedRegion === mapRegionName(entry.Region)
-                                  ? 2
-                                  : 1
-                              }
-                            />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
-                  {/* pie Chart of reagion wise */}
-                  {chartType === "pie" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={materials}
-                          dataKey="QtyOnHand"
-                          nameKey="Region"
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={110}
-                          paddingAngle={0}
-                          cornerRadius={0}
-                          onClick={handleRegionClick}
-                        >
-                          {materials.map((_, index) => (
-                            <Cell
-                              key={`pie-${index}`}
-                              fill={REGION_COLORS[index % REGION_COLORS.length]}
-                              stroke={
-                                selectedRegion ===
-                                mapRegionName(materials[index].Region)
-                                  ? "#000"
-                                  : "#fff"
-                              }
-                              strokeWidth={
-                                selectedRegion ===
-                                mapRegionName(materials[index].Region)
-                                  ? 2
-                                  : 1
-                              }
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip content={renderCustomTooltip} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-                {/* Region Data Side Table */}
-                <div className="w-full sm:w-[35%] h-full pl-0 sm:pl-2 mt-4 sm:mt-0">
-                  <div className="bg-white rounded border border-gray-200 h-full overflow-y-auto">
-                    <div className="sticky top-0 bg-gray-100 px-2 py-1 border-b border-gray-200 flex justify-between items-center">
-                      <h4 className="text-xs font-semibold text-gray-600">
-                        Region Data
-                      </h4>
-                      {selectedRegion && (
-                        <button
-                          onClick={clearRegionSelection}
-                          className="text-xs text-blue-600 hover:text-blue-800"
-                        >
-                          Clear Filter
-                        </button>
-                      )}
-                    </div>
-                    <div className="divide-y divide-gray-100">
-                      {materials.map((region, index) => (
-                        <div
-                          key={index}
-                          className={`px-2 py-1.5 flex items-center hover:bg-gray-50 cursor-pointer ${
-                            selectedRegion === mapRegionName(region.Region)
-                              ? "bg-blue-50"
-                              : ""
-                          }`}
-                          onClick={() => {
-                            const mappedRegion = mapRegionName(region.Region);
-                            setSelectedRegion(
-                              selectedRegion === mappedRegion
-                                ? null
-                                : mappedRegion
-                            );
-                          }}
-                        >
-                          <div
-                            className="w-3 h-3 rounded-sm mr-2 flex-shrink-0"
-                            style={{
-                              backgroundColor:
-                                REGION_COLORS[index % REGION_COLORS.length],
-                            }}
-                          ></div>
-                          <div className="flex-1 min-w-0">
-                            <div
-                              className="text-xs font-medium text-gray-700 truncate"
-                              title={mapRegionName(region.Region)}
-                            >
-                              {mapRegionName(region.Region)}
-                              {selectedRegion ===
-                                mapRegionName(region.Region) && (
-                                <span className="ml-1 text-blue-600">
-                                  (selected)
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              Qty: {region.QtyOnHand.toLocaleString()}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+              <div className="flex-1 flex flex-col justify-center items-center">
+                {allMaterialsZero ? (
+                  <div className="flex items-center justify-center h-full text-red-500 font-semibold text-base">
+                    There is no material in stock for this material (Region
+                    Wise).
                   </div>
-                </div>
+                ) : materials.length > 0 ? (
+                  <div className="w-full h-[320px] flex items-center justify-center">
+                    {chartType === "donut" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={materials}
+                              dataKey="QtyOnHand"
+                              nameKey="Region"
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={60}
+                              outerRadius={110}
+                              paddingAngle={0}
+                              cornerRadius={0}
+                              onClick={handleRegionClick}
+                            >
+                              {materials.map((_, index) => (
+                                <Cell
+                                  key={`donut-${index}`}
+                                  fill={
+                                    REGION_COLORS[index % REGION_COLORS.length]
+                                  }
+                                  stroke={
+                                    selectedRegion ===
+                                    mapRegionName(materials[index].Region)
+                                      ? "#000"
+                                      : "#fff"
+                                  }
+                                  strokeWidth={
+                                    selectedRegion ===
+                                    mapRegionName(materials[index].Region)
+                                      ? 2
+                                      : 1
+                                  }
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip content={renderCustomTooltip} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                    {chartType === "bar" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            data={materials}
+                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                            onClick={handleRegionClick}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              dataKey="Region"
+                              tickFormatter={mapRegionName}
+                              fontSize={11}
+                            />
+                            <YAxis fontSize={11} />
+                            <Tooltip content={renderCustomTooltip} />
+                            <Bar
+                              dataKey="QtyOnHand"
+                              fill="#1E40AF"
+                              radius={[4, 4, 0, 0]}
+                              onClick={handleRegionClick}
+                            >
+                              {materials.map((entry, index) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={
+                                    REGION_COLORS[index % REGION_COLORS.length]
+                                  }
+                                  stroke={
+                                    selectedRegion ===
+                                    mapRegionName(entry.Region)
+                                      ? "#000"
+                                      : "#fff"
+                                  }
+                                  strokeWidth={
+                                    selectedRegion ===
+                                    mapRegionName(entry.Region)
+                                      ? 2
+                                      : 1
+                                  }
+                                />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                    {chartType === "pie" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={materials}
+                              dataKey="QtyOnHand"
+                              nameKey="Region"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={110}
+                              paddingAngle={0}
+                              cornerRadius={0}
+                              onClick={handleRegionClick}
+                            >
+                              {materials.map((_, index) => (
+                                <Cell
+                                  key={`pie-${index}`}
+                                  fill={
+                                    REGION_COLORS[index % REGION_COLORS.length]
+                                  }
+                                  stroke={
+                                    selectedRegion ===
+                                    mapRegionName(materials[index].Region)
+                                      ? "#000"
+                                      : "#fff"
+                                  }
+                                  strokeWidth={
+                                    selectedRegion ===
+                                    mapRegionName(materials[index].Region)
+                                      ? 2
+                                      : 1
+                                  }
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip content={renderCustomTooltip} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400 italic">
+                    No region data available
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-400 italic">
-                No region data available
+            </div>
+            {/* Region Data Table */}
+            <div className="w-full md:w-[180px] bg-white rounded-xl shadow border border-gray-200 flex flex-col ml-0 md:ml-2 mt-4 md:mt-0 max-h-[420px] overflow-y-auto">
+              <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b border-gray-100 flex justify-between items-center z-10">
+                <h4 className="text-xs font-semibold text-gray-600 tracking-wide">
+                  Region Data
+                </h4>
+                {selectedRegion && (
+                  <button
+                    onClick={clearRegionSelection}
+                    className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Clear
+                  </button>
+                )}
               </div>
-            )}
-          </div>
-
-          {/* Province-wise Chart */}
-          <div className="w-full md:w-[48%] h-[350px] relative">
-            <div className="absolute top-2 left-2 right-20 z-10">
-              <h3 className="text-xs font-medium text-gray-600 bg-white px-2 py-1 rounded shadow-sm border leading-tight">
-                {selectedRegion
-                  ? `Provinces in ${selectedRegion} - ${matCd} ${
-                      materialName ? `: ${materialName}` : ""
-                    }`
-                  : `All Provinces Quantity On Hand - ${matCd} ${
-                      materialName ? `: ${materialName}` : ""
+              <div className="divide-y divide-gray-100">
+                {materials.map((region, index) => (
+                  <div
+                    key={index}
+                    className={`px-3 py-2 flex items-center hover:bg-blue-50 cursor-pointer transition-colors ${
+                      selectedRegion === mapRegionName(region.Region)
+                        ? "bg-blue-50"
+                        : ""
                     }`}
-              </h3>
-            </div>
-            <div className="absolute top-2 right-2 z-10">
-              <select
-                value={provinceChartType}
-                onChange={(e) =>
-                  setProvinceChartType(
-                    e.target.value as "donut" | "bar" | "pie"
-                  )
-                }
-                className="px-2 py-1 text-xs bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="donut">Donut</option>
-                <option value="bar">Bar</option>
-                <option value="pie">Pie</option>
-              </select>
-            </div>
-            {provinceLoading ? (
-              <div className="flex items-center justify-center h-full text-blue-600">
-                Loading province data...
-              </div>
-            ) : provinceError ? (
-              <div className="flex items-center justify-center h-full text-red-600 text-xs p-4">
-                <div className="text-center">
-                  <div className="mb-1">Error loading province data:</div>
-                  <div className="text-red-500">{provinceError}</div>
-                </div>
-              </div>
-            ) : allProvincesZero ? (
-              <div className="flex items-center justify-center h-full text-red-500 font-semibold text-base">
-                There is no material in stock for this material (province wise).
-              </div>
-            ) : provinceStocks.length > 0 ? (
-              <div className="pt-8 h-full flex flex-col sm:flex-row">
-                {/* Donut Chart province wise */}
-                <div className="w-full sm:w-[65%] h-full">
-                  {provinceChartType === "donut" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={provinceStocks}
-                          dataKey="QtyOnHand"
-                          nameKey="Province"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={110}
-                          paddingAngle={0}
-                          cornerRadius={0}
-                        >
-                          {provinceStocks.map((_, index) => (
-                            <Cell
-                              key={`province-donut-${index}`}
-                              fill={
-                                PROVINCE_COLORS[index % PROVINCE_COLORS.length]
-                              }
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip content={renderProvinceTooltip} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                  {/* Bar Chart Province wise */}
-                  {provinceChartType === "bar" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={provinceStocks}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
+                    onClick={() => {
+                      const mappedRegion = mapRegionName(region.Region);
+                      setSelectedRegion(
+                        selectedRegion === mappedRegion ? null : mappedRegion
+                      );
+                    }}
+                  >
+                    <div
+                      className="w-3 h-3 rounded-sm mr-2 flex-shrink-0 border border-gray-200"
+                      style={{
+                        backgroundColor:
+                          REGION_COLORS[index % REGION_COLORS.length],
+                      }}
+                    ></div>
+                    <div className="flex-1 min-w-0">
+                      <div
+                        className="text-xs font-medium text-gray-700 truncate"
+                        title={mapRegionName(region.Region)}
                       >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                          dataKey="Province"
-                          fontSize={9}
-                          angle={-45}
-                          textAnchor="end"
-                          height={1}
-                          interval={0}
-                        />
-                        <YAxis fontSize={11} />
-                        <Tooltip content={renderProvinceTooltip} />
-                        <Bar
-                          dataKey="QtyOnHand"
-                          fill="#8B5CF6"
-                          radius={[4, 4, 0, 0]}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
-                  {/*pie Chart province wise */}
-                  {provinceChartType === "pie" && (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={provinceStocks}
-                          dataKey="QtyOnHand"
-                          nameKey="Province"
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={110}
-                          paddingAngle={0}
-                          cornerRadius={0}
-                        >
-                          {provinceStocks.map((_, index) => (
-                            <Cell
-                              key={`province-pie-${index}`}
-                              fill={
-                                PROVINCE_COLORS[index % PROVINCE_COLORS.length]
-                              }
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip content={renderProvinceTooltip} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-                {/* Province Data side  Table */}
-                <div className="w-full sm:w-[35%] h-full pl-0 sm:pl-2 mt-4 sm:mt-0">
-                  <div className="bg-white rounded border border-gray-200 h-full overflow-y-auto">
-                    <div className="sticky top-0 bg-gray-100 px-2 py-1 border-b border-gray-200">
-                      <h4 className="text-xs font-semibold text-gray-600">
-                        {selectedRegion
-                          ? `${selectedRegion} Provinces`
-                          : "All Provinces"}
-                      </h4>
-                    </div>
-                    <div className="divide-y divide-gray-100">
-                      {provinceStocks.map((province, index) => (
-                        <div
-                          key={index}
-                          className="px-2 py-1.5 flex items-center hover:bg-gray-50"
-                        >
-                          <div
-                            className="w-3 h-3 rounded-sm mr-2 flex-shrink-0"
-                            style={{
-                              backgroundColor:
-                                PROVINCE_COLORS[index % PROVINCE_COLORS.length],
-                            }}
-                          ></div>
-                          <div className="flex-1 min-w-0">
-                            <div
-                              className="text-xs font-medium text-gray-700 truncate"
-                              title={province.Province}
-                            >
-                              {province.Province}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              Qty: {province.QtyOnHand.toLocaleString()}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                        {mapRegionName(region.Region)}
+                        {selectedRegion === mapRegionName(region.Region) && (
+                          <span className="ml-1 text-blue-600">(selected)</span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-gray-500">
+                        Qty: {region.QtyOnHand.toLocaleString()}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-400 italic">
-                {selectedRegion
-                  ? `No province data available for ${selectedRegion}`
-                  : "No province data available"}
+            </div>
+          </div>
+          {/* Province-wise Chart + Details */}
+          <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-4">
+            {/* Chart Card */}
+            <div className="flex-1 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 flex flex-col min-h-[420px] relative">
+              <div className="flex justify-between items-center mb-3 pb-1 border-b border-gray-100">
+                <h3 className="text-[13px] font-semibold text-gray-700 tracking-tight flex items-center gap-2">
+                  Province Quantity On Hand
+                </h3>
+                <select
+                  value={provinceChartType}
+                  onChange={(e) =>
+                    setProvinceChartType(
+                      e.target.value as "donut" | "bar" | "pie"
+                    )
+                  }
+                  className="px-2 py-1 text-xs bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-500"
+                >
+                  <option value="donut">Donut</option>
+                  <option value="bar">Bar</option>
+                  <option value="pie">Pie</option>
+                </select>
               </div>
-            )}
+              <div className="flex-1 flex flex-col justify-center items-center">
+                {provinceLoading ? (
+                  <div className="flex items-center justify-center h-full text-blue-600">
+                    Loading province data...
+                  </div>
+                ) : provinceError ? (
+                  <div className="flex items-center justify-center h-full text-red-600 text-xs p-4">
+                    <div className="text-center">
+                      <div className="mb-1">Error loading province data:</div>
+                      <div className="text-red-500">{provinceError}</div>
+                    </div>
+                  </div>
+                ) : allProvincesZero ? (
+                  <div className="flex items-center justify-center h-full text-red-500 font-semibold text-base">
+                    There is no material in stock for this material (province
+                    wise).
+                  </div>
+                ) : provinceStocks.length > 0 ? (
+                  <div className="w-full h-[320px] flex items-center justify-center">
+                    {provinceChartType === "donut" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={provinceStocks}
+                              dataKey="QtyOnHand"
+                              nameKey="Province"
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={60}
+                              outerRadius={110}
+                              paddingAngle={0}
+                              cornerRadius={0}
+                            >
+                              {provinceStocks.map((_, index) => (
+                                <Cell
+                                  key={`province-donut-${index}`}
+                                  fill={
+                                    PROVINCE_COLORS[
+                                      index % PROVINCE_COLORS.length
+                                    ]
+                                  }
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip content={renderProvinceTooltip} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                    {provinceChartType === "bar" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            data={provinceStocks}
+                            margin={{
+                              top: 20,
+                              right: 30,
+                              left: 20,
+                              bottom: 100,
+                            }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              dataKey="Province"
+                              fontSize={9}
+                              angle={-45}
+                              textAnchor="end"
+                              height={1}
+                              interval={0}
+                            />
+                            <YAxis fontSize={11} />
+                            <Tooltip content={renderProvinceTooltip} />
+                            <Bar
+                              dataKey="QtyOnHand"
+                              fill="#8B5CF6"
+                              radius={[4, 4, 0, 0]}
+                            />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                    {provinceChartType === "pie" && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/70 rounded-lg shadow-inner">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={provinceStocks}
+                              dataKey="QtyOnHand"
+                              nameKey="Province"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={110}
+                              paddingAngle={0}
+                              cornerRadius={0}
+                            >
+                              {provinceStocks.map((_, index) => (
+                                <Cell
+                                  key={`province-pie-${index}`}
+                                  fill={
+                                    PROVINCE_COLORS[
+                                      index % PROVINCE_COLORS.length
+                                    ]
+                                  }
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip content={renderProvinceTooltip} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400 italic">
+                    No province data available
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Province Data Table */}
+            <div className="w-full md:w-[180px] bg-white rounded-xl shadow border border-gray-200 flex flex-col ml-0 md:ml-2 mt-4 md:mt-0 max-h-[420px] overflow-y-auto">
+              <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b border-gray-100">
+                <h4 className="text-xs font-semibold text-gray-600 tracking-wide">
+                  {selectedRegion
+                    ? `${selectedRegion} Provinces`
+                    : "All Provinces"}
+                </h4>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {provinceStocks.map((province, index) => (
+                  <div
+                    key={index}
+                    className="px-3 py-2 flex items-center hover:bg-purple-50 transition-colors"
+                  >
+                    <div
+                      className="w-3 h-3 rounded-sm mr-2 flex-shrink-0 border border-gray-200"
+                      style={{
+                        backgroundColor:
+                          PROVINCE_COLORS[index % PROVINCE_COLORS.length],
+                      }}
+                    ></div>
+                    <div className="flex-1 min-w-0">
+                      <div
+                        className="text-xs font-medium text-gray-700 truncate"
+                        title={province.Province}
+                      >
+                        {province.Province}
+                      </div>
+                      <div className="text-[11px] text-gray-500">
+                        Qty: {province.QtyOnHand.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -757,26 +801,26 @@ const MaterialDetails: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
           <div className="px-2 sm:px-4 py-3 border-b border-gray-200 bg-gray-50">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
-              <h3 className="text-base sm:text-lg font-medium text-gray-700">
+              <h3 className="text-[12px] sm:text-[13px] font-semibold text-gray-700">
                 Stock Balances Of - {matCd}
               </h3>
               <div className="flex gap-2">
                 <button
                   onClick={printPDF}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                  className="flex items-center gap-1 px-3 py-1.5 border border-blue-400 text-blue-700 bg-white rounded-md text-[11px] font-medium shadow-sm hover:bg-blue-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
                 >
-                  Print PDF
+                  <FaPrint className="w-3 h-3" /> Print PDF
                 </button>
                 <button
                   onClick={downloadAsCSV}
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  className="flex items-center gap-1 px-3 py-1.5 border border-green-400 text-green-700 bg-white rounded-md text-[11px] font-medium shadow-sm hover:bg-green-50 hover:text-green-800 focus:outline-none focus:ring-2 focus:ring-green-200 transition"
                 >
-                  Download CSV
+                  <FaDownload className="w-3 h-3" /> Download CSV
                 </button>
               </div>
             </div>
             {stockBalances.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px]">
                 <div className="flex">
                   <div className="text-gray-500 font-semibold mr-2">
                     Material Name:
@@ -800,39 +844,39 @@ const MaterialDetails: React.FC = () => {
             )}
           </div>
           {stockBalanceLoading ? (
-            <div className="flex justify-center items-center py-8 text-blue-600">
+            <div className="flex justify-center items-center py-8 text-blue-600 text-[11px]">
               Loading stock balances...
             </div>
           ) : stockBalanceError ? (
-            <div className="text-red-600 bg-red-50 border border-red-200 p-4 rounded">
-              <div className="text-sm text-red-600 mb-2">
+            <div className="text-red-600 bg-red-50 border border-red-200 p-4 rounded text-[11px]">
+              <div className="text-[11px] text-red-600 mb-2">
                 Error loading stock balances: {stockBalanceError}
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-[10px] text-gray-500">
                 Check the browser console for more details.
               </div>
             </div>
           ) : stockBalances.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-300 rounded text-xs sm:text-sm">
-                <thead className="bg-purple-100">
+              <table className="min-w-full border border-gray-300 rounded text-[11px]">
+                <thead className="bg-gray-100">
                   <tr>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
                       Region
                     </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
                       Province
                     </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
                       Department
                     </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500 font-medium">
                       Quantity On Hand
                     </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500 font-medium">
                       Reorder Qty
                     </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500">
+                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
                       UOM
                     </th>
                   </tr>
@@ -880,7 +924,7 @@ const MaterialDetails: React.FC = () => {
               </table>
             </div>
           ) : (
-            <div className="text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded">
+            <div className="text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded text-[11px]">
               No stock balance data found for material code: {matCd}
             </div>
           )}

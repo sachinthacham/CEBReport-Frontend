@@ -34,7 +34,9 @@ const BillingChart = ({ data }: Props) => {
   const maxUnits = Math.max(...data.map((item) => parseFloat(item.units) || 0));
 
   const handleViewReport = () => {
-    navigate("/report/billing-payment/reading-history");
+    navigate("/report/billing-payment/reading-history", {
+      state: { openChart: "readingHistory" }, // or any identifier for the open chart/subtopic
+    });
   };
 
   return (
