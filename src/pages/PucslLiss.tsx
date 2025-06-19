@@ -10,7 +10,6 @@ type Subtopic = {
 const PucslLiss = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
     // Get PUCSL/LISS topic's subtopics directly from sidebarData
@@ -23,10 +22,8 @@ const PucslLiss = () => {
   const toggleCard = (id: number) => {
     if (expandedCard === id) {
       setExpandedCard(null);
-      setVisibleCard(null);
     } else {
       setExpandedCard(id);
-      setVisibleCard(id);
     }
   };
 

@@ -12,7 +12,6 @@ type Subtopic = {
 const General = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
     // Get General topic's subtopics directly from sidebarData
@@ -25,10 +24,8 @@ const General = () => {
   const toggleCard = (id: number) => {
     if (expandedCard === id) {
       setExpandedCard(null);
-      setVisibleCard(null);
     } else {
       setExpandedCard(id);
-      setVisibleCard(id);
     }
   };
 

@@ -11,7 +11,6 @@ const GeneralReports: React.FC = () => {
   const location = useLocation();
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
     // Get subtopics from location state if available
@@ -28,7 +27,6 @@ const GeneralReports: React.FC = () => {
         // Auto-expand the first subtopic
         if (currentTopic.subtopics.length > 0) {
           setExpandedCard(currentTopic.subtopics[0].id);
-          setVisibleCard(currentTopic.subtopics[0].id);
         }
       }
     }
@@ -37,10 +35,8 @@ const GeneralReports: React.FC = () => {
   const toggleCard = (id: number) => {
     if (expandedCard === id) {
       setExpandedCard(null);
-      setVisibleCard(null);
     } else {
       setExpandedCard(id);
-      setVisibleCard(id);
     }
   };
 
@@ -67,7 +63,7 @@ const GeneralReports: React.FC = () => {
               expandedCard === subtopic.id ? "max-h-[1000px]" : "max-h-0"
             }`}
           >
-            {visibleCard === subtopic.id && renderCardContent(subtopic.name)}
+            {expandedCard === subtopic.id && renderCardContent(subtopic.name)}
           </div>
         </div>
       ))}

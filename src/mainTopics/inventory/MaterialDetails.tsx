@@ -12,13 +12,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import {
-  FaPrint,
-  FaDownload,
-  FaArrowLeft,
-  FaListOl,
-  FaCubes,
-} from "react-icons/fa";
+import { FaPrint, FaDownload, FaArrowLeft, FaCubes } from "react-icons/fa";
 
 type MaterialStock = {
   ErrorMessage: string | null;
