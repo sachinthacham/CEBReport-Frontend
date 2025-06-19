@@ -17,7 +17,7 @@ const LoginPage = () => {
           }}
         ></div>
 
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md opacity-80">
           <LoginCard />
         </div>
       </section>

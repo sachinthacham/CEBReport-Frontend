@@ -1,24 +1,24 @@
-// src/pages/General.jsx
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
-import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
 
 type Subtopic = {
   id: number;
   name: string;
 };
 
-const General = () => {
+const SolarInformation = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [visibleCard, setVisibleCard] = useState<number | null>(null);
 
   useEffect(() => {
-    // Get General topic's subtopics directly from sidebarData
-    const generalTopic = sidebarData.find((topic) => topic.name === "General");
-    if (generalTopic) {
-      setSubtopics(generalTopic.subtopics);
+    // Get Solar Information topic's subtopics directly from sidebarData
+    const solarTopic = sidebarData.find(
+      (topic) => topic.name === "Solar Information"
+    );
+    if (solarTopic) {
+      setSubtopics(solarTopic.subtopics);
     }
   }, []);
 
@@ -34,9 +34,20 @@ const General = () => {
 
   const renderSubtopicContent = (subtopicName: string) => {
     switch (subtopicName.toLowerCase()) {
-      case "customer information":
-        return <CustomerDetails />;
-
+      case "solar panel details":
+        return <div>Solar Panel Details Content</div>;
+      case "solar generation":
+        return <div>Solar Generation Content</div>;
+      case "solar efficiency":
+        return <div>Solar Efficiency Content</div>;
+      case "solar maintenance":
+        return <div>Solar Maintenance Content</div>;
+      case "solar performance":
+        return <div>Solar Performance Content</div>;
+      case "solar reports":
+        return <div>Solar Reports Content</div>;
+      case "solar alerts":
+        return <div>Solar Alerts Content</div>;
       default:
         return (
           <div className="text-red-500 text-xs">
@@ -86,4 +97,4 @@ const General = () => {
   );
 };
 
-export default General;
+export default SolarInformation;

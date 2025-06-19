@@ -54,14 +54,14 @@ const CustomerDetails = () => {
   };
 
   return (
-    <div className="p-2 sm:p-4 md:p-6 w-full max-w-[2000px] mx-auto">
+    <div className="p-2 sm:p-2 md:p-1 w-full max-w-[2000px] mx-auto">
       <div className="w-full flex flex-col gap-2 sm:gap-4 text-sm">
         <BillingForm onSubmit={handleFormSubmit} />
       </div>
 
-      <div className="w-full mt-4 sm:mt-6 md:mt-8">
+      <div className="w-full mt-4 sm:mt-6 md:mt-3">
         {isSpecial && bulkCustomer ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-4">
             <div className="w-full h-[300px] sm:h-[400px]">
               <SpecialChart1 data={bulkCustomer.customerTransDetail} />
             </div>
@@ -73,7 +73,7 @@ const CustomerDetails = () => {
             </div>
           </div>
         ) : customer && ord_cust_data ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-4">
             <div className="w-full h-[300px] sm:h-[400px]">
               <BillingChart data={customer.customerReadDetail} />
             </div>

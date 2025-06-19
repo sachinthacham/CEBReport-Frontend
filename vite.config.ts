@@ -22,6 +22,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false, // allow self-signed certs
       },
+      "/api": {
+        target: "http://10.128.1.126",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

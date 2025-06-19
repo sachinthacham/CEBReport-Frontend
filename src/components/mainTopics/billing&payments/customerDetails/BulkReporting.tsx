@@ -30,11 +30,8 @@ interface BulkReportRow {
   balance: number | null;
   balanceDrCr: string | null;
 }
-interface BulkReportingProps {
-  onClose: () => void;
-}
 
-const BulkReporting = ({ onClose }: BulkReportingProps) => {
+const BulkReporting = () => {
   const [rows, setRows] = useState<BulkReportRow[]>([]);
   const [customer, setCustomer] = useState<CustomerDetails | null>(null);
   const [loading, setLoading] = useState(false);
@@ -190,7 +187,6 @@ const BulkReporting = ({ onClose }: BulkReportingProps) => {
       ref={printRef}
     >
       <button
-        onClick={onClose}
         className="absolute top-1 right-1 sm:top-2 sm:right-2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
         aria-label="Close"
       >

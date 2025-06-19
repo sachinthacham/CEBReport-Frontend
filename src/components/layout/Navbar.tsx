@@ -1,31 +1,21 @@
-import CEBlogo from "../../assets/CEB logo.png";
-import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import CEBlogo from "../../assets/CEBLOGO.png";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate("/report");
-  };
   return (
-    <nav className="h-16 bg-white shadow-md flex items-center justify-between px-4 sm:px-6 relative bg-fixed">
-      <div className="flex items-center gap-4">
-        <div className="w-16 sm:w-20 md:w-24">
-          <img src={CEBlogo} alt="CEB Logo" className="w-full h-auto" />
+    <nav className="h-14 bg-gradient-to-r from-white to-gray-50 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] flex items-center justify-between px-6 sm:px-0 relative bg-fixed border-b border-gray-100 ">
+      <div className="flex items-center">
+        <div className="w-14 sm:w-16 md:w-20 transition-transform duration-300 flex items-center">
+          <img
+            src={CEBlogo}
+            alt="CEB Logo"
+            className="w-full h-auto object-contain max-h-10"
+          />
         </div>
-        <div className="text-lg sm:text-xl font-bold text-[#800000] hidden sm:block">
+        <div className="text-lg sm:text-xl font-semibold text-[#800000] hidden sm:block tracking-wide ml-4">
           CEB REPORTING
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <div
-          className="flex items-center gap-2 text-white bg-[#800000] hover:bg-[#a00000] px-3 py-1.5 sm:px-4 sm:py-2 rounded-md transition-colors cursor-pointer"
-          onClick={handleNavigate}
-        >
-          <FaArrowLeft className="text-sm sm:text-base" />
-          <span className="text-xs sm:text-sm">Back To Dashboard</span>
-        </div>
-      </div>
+      <div className="flex items-center gap-3"></div>
     </nav>
   );
 };
