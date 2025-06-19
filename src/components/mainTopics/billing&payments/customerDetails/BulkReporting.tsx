@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
+import {
+  FaArrowLeft,
+  FaFileDownload,
+  FaPrint,
+  FaUserCircle,
+  FaMapMarkerAlt,
+  FaHome,
+  FaBolt,
+  FaListOl,
+  FaCalendarAlt,
+  FaBalanceScale,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface CustomerDetails {
   acctNumber: string;
@@ -37,6 +50,7 @@ const BulkReporting = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const { acctNo, FbillCycle, TbillCycle } = useSelector(
     (state: RootState) => state.billing
@@ -182,71 +196,100 @@ const BulkReporting = () => {
 
   return (
     <div
-      className="mx-auto p-2 sm:p-4 bg-white rounded-lg shadow relative"
-      style={{ width: "100%", maxWidth: "100%" }}
+      className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow border border-gray-100 relative"
       ref={printRef}
+      style={{ width: "100%", maxWidth: "100%" }}
     >
+      {/* Back Button */}
       <button
-        className="absolute top-1 right-1 sm:top-2 sm:right-2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
-        aria-label="Close"
+        onClick={() => navigate("/report/billing-payment")}
+        className="mb-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded hover:bg-gray-200 transition border border-gray-200"
       >
-        <span className="text-xl sm:text-2xl font-bold">×</span>
+        <FaArrowLeft className="w-3 h-3" />
+        Back to Charts
       </button>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6 mt-6 sm:mt-8">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700 break-words">
-          Billing Details : {customer?.acctNumber}
-        </h2>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6 mt-2">
+        <div className="flex items-center gap-2 mb-2 sm:mb-0">
+          <FaListOl className="w-5 h-5 text-gray-400" />
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 tracking-tight break-words">
+            Bulk Billing Details
+          </h2>
+          <span className="ml-2 text-xs text-gray-500 font-normal">
+            Account:{" "}
+            <span className="text-gray-700 font-semibold">
+              {customer?.acctNumber}
+            </span>
+          </span>
+        </div>
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={printPDF}
-            className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-red-600 text-white rounded hover:bg-red-700 transition"
+            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded border border-gray-200 hover:bg-gray-200 transition"
           >
-            Print PDF
+            <FaPrint className="w-3 h-3" /> Print PDF
           </button>
           <button
             onClick={downloadAsCSV}
-            className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-green-600 text-white rounded hover:bg-green-700 transition"
+            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded border border-gray-200 hover:bg-gray-200 transition"
           >
-            Download Excel
+            <FaFileDownload className="w-3 h-3" /> Download Excel
           </button>
         </div>
       </div>
-
-      {loading && (
-        <div className="text-blue-600 text-sm sm:text-base">Loading...</div>
-      )}
-      {error && (
-        <div className="text-red-600 text-sm sm:text-base">{error}</div>
-      )}
 
       {/* Customer Details */}
       {customer && (
         <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded border border-gray-200">
           <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
-            <div className="break-words">
-              <strong>Account Number:</strong> {customer.acctNumber}
+            <div className="break-words flex items-center gap-1">
+              <FaUserCircle className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Account:</strong> {customer.acctNumber}
+              </span>
             </div>
-            <div className="break-words">
-              <strong>Name:</strong> {customer.name}
+            <div className="break-words flex items-center gap-1">
+              <FaUserCircle className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Name:</strong> {customer.name}
+              </span>
             </div>
-            <div className="break-words">
-              <strong>Address:</strong> {customer.address}
+            <div className="break-words flex items-center gap-1">
+              <FaHome className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Address:</strong> {customer.address}
+              </span>
             </div>
-            <div>
-              <strong>Date:</strong> {new Date().toLocaleDateString()}
+            <div className="flex items-center gap-1">
+              <FaCalendarAlt className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Date:</strong> {new Date().toLocaleDateString()}
+              </span>
             </div>
-            <div>
-              <strong>Tariff:</strong> {customer.tariff}
+            <div className="flex items-center gap-1">
+              <FaBalanceScale className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Tariff:</strong> {customer.tariff}
+              </span>
             </div>
-            <div>
-              <strong>Walk Order:</strong> {customer.wlkOdr}
+            <div className="flex items-center gap-1">
+              <FaListOl className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Walk Order:</strong> {customer.wlkOdr}
+              </span>
             </div>
-            <div>
-              <strong>Province:</strong> {customer.province}
+            <div className="flex items-center gap-1">
+              <FaMapMarkerAlt className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Province:</strong> {customer.province}
+              </span>
             </div>
-            <div>
-              <strong>Area:</strong> {customer.areaName}
+            <div className="flex items-center gap-1">
+              <FaBolt className="text-gray-300 w-4 h-4" />{" "}
+              <span>
+                <strong>Area:</strong> {customer.areaName}
+              </span>
             </div>
           </div>
         </div>
@@ -254,58 +297,58 @@ const BulkReporting = () => {
 
       {/* Transaction Table */}
       {rows.length > 0 ? (
-        <div className="overflow-x-auto rounded-lg border border-gray-300">
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
           <div className="min-w-full inline-block align-middle">
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-purple-100">
+              <table className="min-w-full divide-y divide-gray-200 text-xs">
+                <thead className="bg-gray-100 sticky top-0 z-10">
                   <tr>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Bill Month
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Year
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       TXN/Read Date
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Trans. Description
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Current Reading
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Total Units
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Rate
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Amount
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Monthly Charge
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Payment
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Debits
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Credits
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Amount Due
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Due Dr/Cr
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Balance
                     </th>
-                    <th className="px-2 sm:px-3 py-1.5 sm:py-2 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
                       Balance Dr/Cr
                     </th>
                   </tr>
@@ -314,54 +357,58 @@ const BulkReporting = () => {
                   {rows.map((row, idx) => (
                     <tr
                       key={idx}
-                      className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      className={
+                        idx % 2 === 0
+                          ? "bg-white hover:bg-gray-50 transition"
+                          : "bg-gray-50 hover:bg-gray-100 transition"
+                      }
                     >
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.billCycle)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.year)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.transDate)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.transType)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.reading)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
                         {displayCell(row.units)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.rate)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.amount)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.monthlyChg)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.payments)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.debits)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.credits)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.dueAmount)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.dueAmtDrCr)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.balance)}
                       </td>
-                      <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
                         {displayCell(row.balanceDrCr)}
                       </td>
                     </tr>
@@ -373,9 +420,7 @@ const BulkReporting = () => {
         </div>
       ) : (
         !loading && (
-          <div className="text-gray-600 text-sm sm:text-base">
-            No data found.
-          </div>
+          <div className="text-gray-600 text-xs sm:text-sm">No data found.</div>
         )
       )}
     </div>
