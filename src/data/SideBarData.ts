@@ -4,6 +4,7 @@ import { FaBoxes } from "react-icons/fa";
 import { BsFolder2Open } from "react-icons/bs";
 import { MdAssignmentTurnedIn } from "react-icons/md";
 import { GiSolarPower } from "react-icons/gi";
+import { FaBalanceScale } from "react-icons/fa";
 
 export const data = [
   {
@@ -136,5 +137,12 @@ export const data = [
     icon: FaBoxes,
     subtopics: [{ id: 59, name: "Ceylon Electricity Board Material Details" }],
     path: "/report/inventory",
+  },
+  {
+    id: 9,
+    name: "Trial Balance",
+    icon: FaBalanceScale,
+    subtopics: [{ id: 60, name: "Cost center wise trial balances" }],
+    path: "/report/trialBalance",
   },
 ];

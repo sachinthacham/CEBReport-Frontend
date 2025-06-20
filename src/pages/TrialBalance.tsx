@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
-import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
-import SalesReports from "../mainTopics/general/SalesReports";
 
 type Subtopic = {
   id: number;
   name: string;
 };
 
-const General = () => {
+const TrialBalance = () => {
   const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
   useEffect(() => {
-    // Get General topic's subtopics directly from sidebarData
-    const generalTopic = sidebarData.find((topic) => topic.name === "General");
-    if (generalTopic) {
-      setSubtopics(generalTopic.subtopics);
+    // Get PUCSL/LISS topic's subtopics directly from sidebarData
+    const pucslTopic = sidebarData.find(
+      (topic) => topic.name === "Trial Balance"
+    );
+    if (pucslTopic) {
+      setSubtopics(pucslTopic.subtopics);
     }
   }, []);
 
@@ -31,10 +31,9 @@ const General = () => {
 
   const renderSubtopicContent = (subtopicName: string) => {
     switch (subtopicName.toLowerCase()) {
-      case "customer information":
-        return <CustomerDetails />;
-      case "sales data for tariff":
-        return <SalesReports />;
+      case "pucsl regulations":
+        return <div>PUCSL Regulations Content</div>;
+
       default:
         return (
           <div className="text-red-500 text-xs">
@@ -84,4 +83,4 @@ const General = () => {
   );
 };
 
-export default General;
+export default TrialBalance;

@@ -101,7 +101,7 @@ const BillingChart = ({ data }: Props) => {
               <div className="flex items-center gap-1">
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold text-blue-600">
-                  {totalUnits.toFixed(1)} kWh
+                  {totalUnits.toFixed(1)} Units
                 </span>
               </div>
               <div className="flex items-center gap-1">

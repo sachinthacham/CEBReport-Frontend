@@ -5,9 +5,6 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           {/* Company Info */}
           <div className="text-center md:text-left">
-            <h3 className="font-semibold text-[#800000] text-base tracking-wide mb-1">
-              CEB 2025
-            </h3>
             <p className="text-gray-600 text-xs">
               Designed and Developed by{" "}
               <span className="font-medium text-[#800000]">
