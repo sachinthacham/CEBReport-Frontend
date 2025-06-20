@@ -58,6 +58,7 @@ const BillingChart3 = ({ data }: Props) => {
           <Area
             type="monotone"
             dataKey="balance"
+            name="Balance"
             stroke="#ffa600"
             fill="#ffe5b4"
             fillOpacity={0.4}
@@ -81,6 +82,7 @@ const BillingChart3 = ({ data }: Props) => {
           <Legend />
           <Bar
             dataKey="balance"
+            name="Balance"
             fill="#ffa600"
             stroke="#ffa600"
             radius={[4, 4, 0, 0]}

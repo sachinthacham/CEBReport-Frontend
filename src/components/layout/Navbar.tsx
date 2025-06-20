@@ -11,7 +11,7 @@ const Navbar = () => {
             className="w-full h-auto object-contain max-h-10"
           />
         </div>
-        <div className="text-lg sm:text-xl font-semibold text-[#800000] hidden sm:block tracking-wide ml-4">
+        <div className="text-lg sm:text-2xl font-semibold text-[#800000] hidden sm:block tracking-wide ml-4">
           CEB REPORTING
         </div>
       </div>

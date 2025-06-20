@@ -63,6 +63,7 @@ const BillingChart2 = ({ data }: Props) => {
           <Area
             type="monotone"
             dataKey="transAmt"
+            name="Amount"
             stroke="#00bfae"
             fill="#b7efc5"
             fillOpacity={0.4}
@@ -83,7 +84,7 @@ const BillingChart2 = ({ data }: Props) => {
           />
           <Tooltip />
           <Legend />
-          <Bar dataKey="transAmt" fill="#00bfae" />
+          <Bar dataKey="transAmt" name="Amount" fill="#00bfae" />
         </BarChart>
       );
     }

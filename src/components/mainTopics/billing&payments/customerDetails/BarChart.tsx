@@ -32,6 +32,7 @@ const BarChartComponent = ({ data }: Props) => {
         <Legend />
         <Bar
           dataKey="units"
+          name="Units"
           fill="#118ab2"
           radius={[4, 4, 0, 0]}
           barSize={40}

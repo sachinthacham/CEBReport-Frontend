@@ -11,6 +11,7 @@ import BillingPayment from "../pages/BillingPayment";
 import TransactionHistoryReport from "../components/mainTopics/billing&payments/customerDetails/TransactionHistoryReport";
 import OrdinaryReadingHistory from "../components/mainTopics/billing&payments/customerDetails/OrdinaryReadingHistory";
 import BulkReporting from "../components/mainTopics/billing&payments/customerDetails/BulkReporting";
+import TrialBalance from "../pages/TrialBalance";
 
 const ReportRoutes = () => (
   <>
@@ -101,6 +102,15 @@ const ReportRoutes = () => (
       element={
         <Layout>
           <BulkReporting />
+        </Layout>
+      }
+    />
+
+    <Route
+      path="/report/trialBalance"
+      element={
+        <Layout>
+          <TrialBalance />
         </Layout>
       }
     />

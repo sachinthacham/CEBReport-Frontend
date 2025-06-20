@@ -93,5 +93,4 @@ const SolarInformation = () => {
     </div>
   );
 };
-
 export default SolarInformation;

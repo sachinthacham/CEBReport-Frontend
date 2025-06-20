@@ -1,8 +1,8 @@
-// src/pages/General.jsx
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { data as sidebarData } from "../data/SideBarData";
 import CustomerDetails from "../mainTopics/billing&payment/CustomerDetails";
+import SalesReports from "../mainTopics/general/SalesReports";
 
 type Subtopic = {
   id: number;
@@ -33,7 +33,8 @@ const General = () => {
     switch (subtopicName.toLowerCase()) {
       case "customer information":
         return <CustomerDetails />;
-
+      case "sales data for tariff":
+        return <SalesReports />;
       default:
         return (
           <div className="text-red-500 text-xs">

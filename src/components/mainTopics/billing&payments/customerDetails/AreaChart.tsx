@@ -32,6 +32,7 @@ const AreaChartComponent = ({ data }: Props) => {
         <Area
           type="monotone"
           dataKey="units"
+          name="Units"
           stroke="#118ab2"
           fill="#118ab2"
           strokeWidth={2}
