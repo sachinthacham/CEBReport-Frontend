@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import {
+  ORDINARY_SALES_API,
+  BULK_SALES_API,
+} from "../../services/BackendServices";
 
 // Types for sales data
 export interface SalesFormData {
@@ -51,7 +55,7 @@ export const fetchOrdinarySales = createAsyncThunk(
   async (formData: SalesFormData, { rejectWithValue }) => {
     try {
       const response = await axios.post<OrdinarySalesResponse>(
-        "/CEBINFO_API_2025/api/ordinarySales",
+        ORDINARY_SALES_API,
         { billCycle: formData.billCycle }
       );
       return response.data.OrdList || []; // Extract OrdList from response
@@ -68,14 +72,13 @@ export const fetchBulkSales = createAsyncThunk(
   "sales/fetchBulkSales",
   async (formData: SalesFormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post<BulkSalesResponse>(
-        "/CEBINFO_API_2025/api/bulkSales",
-        { billCycle: formData.billCycle }
-      );
+      const response = await axios.post<BulkSalesResponse>(BULK_SALES_API, {
+        billCycle: formData.billCycle,
+      });
       return response.data.BulkList || []; // Extract BulkList from response
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch bulk sales data"
+        error.response?.data?.message || "Failed to  fetch bulk sales data"
       );
     }
   }

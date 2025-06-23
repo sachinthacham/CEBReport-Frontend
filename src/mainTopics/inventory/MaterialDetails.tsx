@@ -13,36 +13,12 @@ import {
   CartesianGrid,
 } from "recharts";
 import { FaPrint, FaDownload, FaArrowLeft, FaCubes } from "react-icons/fa";
-
-type MaterialStock = {
-  ErrorMessage: string | null;
-  MatCd: string;
-  QtyOnHand: number;
-  Region: string;
-  MatNm?: string;
-};
-
-type ProvinceStock = {
-  ErrorMessage: string | null;
-  MatCd: string;
-  QtyOnHand: number;
-  Province: string;
-  MatNm?: string;
-  Region?: string;
-};
-
-type StockBalance = {
-  MatCd: string;
-  Region: string;
-  Province: string;
-  DeptId: string;
-  MatNm: string;
-  UnitPrice: number;
-  CommittedCost: number;
-  ReorderQty: number;
-  UomCd: string;
-  ErrorMessage: string | null;
-};
+import ReportTable from "../../components/shared/ReportTable";
+import type {
+  MaterialStock,
+  ProvinceStock,
+  StockBalance,
+} from "../../interfaces/materialTypes";
 
 const REGION_COLORS = ["#1E40AF", "#059669", "#DC2626", "#7C3AED", "#EA580C"];
 const PROVINCE_COLORS = [
@@ -837,95 +813,25 @@ const MaterialDetails: React.FC = () => {
               </div>
             )}
           </div>
-          {stockBalanceLoading ? (
-            <div className="flex justify-center items-center py-8 text-blue-600 text-[11px]">
-              Loading stock balances...
-            </div>
-          ) : stockBalanceError ? (
-            <div className="text-red-600 bg-red-50 border border-red-200 p-4 rounded text-[11px]">
-              <div className="text-[11px] text-red-600 mb-2">
-                Error loading stock balances: {stockBalanceError}
-              </div>
-              <div className="text-[10px] text-gray-500">
-                Check the browser console for more details.
-              </div>
-            </div>
-          ) : stockBalances.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-300 rounded text-[11px]">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
-                      Region
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
-                      Province
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
-                      Department
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500 font-medium">
-                      Quantity On Hand
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-right text-gray-500 font-medium">
-                      Reorder Qty
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 border-b text-left text-gray-500 font-medium">
-                      UOM
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stockBalances.map((balance, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    >
-                      <td className="px-2 sm:px-4 py-2 border-b text-gray-500">
-                        {mapRegionName(balance.Region)}
-                      </td>
-                      <td className="px-2 sm:px-4 py-2 border-b text-gray-500">
-                        {balance.Province}
-                      </td>
-                      <td
-                        className="px-2 sm:px-4 py-2 border-b max-w-xs truncate text-gray-500"
-                        title={balance.DeptId}
-                      >
-                        {balance.DeptId}
-                      </td>
-                      <td className="px-2 sm:px-4 py-2 border-b text-right text-gray-500">
-                        {typeof balance.CommittedCost === "number"
-                          ? balance.CommittedCost.toLocaleString("en-US", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })
-                          : "-"}
-                      </td>
-                      <td className="px-2 sm:px-4 py-2 border-b text-right text-gray-500">
-                        {typeof balance.ReorderQty === "number"
-                          ? balance.ReorderQty.toLocaleString("en-US", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })
-                          : "-"}
-                      </td>
-                      <td className="px-2 sm:px-4 py-2 border-b text-gray-500">
-                        {balance.UomCd}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded text-[11px]">
-              No stock balance data found for material code: {matCd}
-            </div>
-          )}
+          <ReportTable
+            columns={[
+              { label: "Region", accessor: "Region" },
+              { label: "Province", accessor: "Province" },
+              { label: "Department", accessor: "DeptId" },
+              {
+                label: "Quantity On Hand",
+                accessor: "CommittedCost",
+                align: "right",
+              },
+              { label: "Reorder Qty", accessor: "ReorderQty", align: "right" },
+              { label: "UOM", accessor: "UomCd" },
+            ]}
+            data={stockBalances}
+            rowKey={(_, idx) => idx}
+          />
         </div>
       </div>
     </div>
   );
 };
-
 export default MaterialDetails;
