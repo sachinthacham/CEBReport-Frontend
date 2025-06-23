@@ -1,53 +1,9 @@
-import axios from "axios";
-const BASE_URL = "http://localhost:5131/";
-export const fetchProvinceData = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}api/provinces/getall`);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-export const fetchAreaData = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}api/areas/getall`);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-export const fetchCustomerData = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}Customers/area/chilaw`);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-export const fetchCustomerCountByProvince = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}api/Customers/provincecount`);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.log("Error fetching data:", error);
-  }
-};
-
-export const fetchCustomerCountByArea = async (provinceId: number) => {
-  try {
-    const response = await axios.get(
-      `${BASE_URL}api/Customers/areacount/${provinceId}`
-    );
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.log("Error fetching data:", error);
-  }
-};
+export const ORDINARY_SALES_API = "/CEBINFO_API_2025/api/ordinarySales";
+export const BULK_SALES_API = "/CEBINFO_API_2025/api/bulkSales";
+export const BILL_MONTH_API = "/CEBINFO_API_2025/api/billMonth";
+export const BILL_MONTH_BULK_API = "/CEBINFO_API_2025/api/billMonthBulk";
+export const Ordinary_Reading_History_API =
+  "/CEBINFO_API_2025/api/OrdinaryReadingHistory";
+export const Bulk_Billing_Report_API = "/CEBINFO_API_2025/api/bulkBreakup5";
+export const Ordinary_CusTransaction_API =
+  "/CEBINFO_API_2025/api/OrdinaryCusTransaction";
