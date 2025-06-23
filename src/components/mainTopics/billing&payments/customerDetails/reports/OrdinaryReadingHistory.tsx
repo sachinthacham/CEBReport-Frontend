@@ -1,13 +1,8 @@
-import { postJSON } from "../../../../helpers/LoginHelper";
-import {
-  Transaction,
-  CustomerTransactionHistory,
-  RawTransaction,
-} from "../../../../data/DataTypes";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/Store";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { postJSON } from "../../../../../helpers/LoginHelper";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/Store";
+import { Ordinary_Reading_History_API } from "../../../../../services/BackendServices";
 import {
   FaArrowLeft,
   FaFileDownload,
@@ -20,17 +15,27 @@ import {
   FaCalendarAlt,
   FaBalanceScale,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import ReportTable from "../../../../shared/ReportTable";
+import type {
+  ReadTransaction,
+  CustomerTransactionHistory,
+} from "../../../../../interfaces/chartTypes";
 
-const TransactionHistoryReport = () => {
-  const [data, setData] = useState<CustomerTransactionHistory | null>(null);
+const ReadingHistoryReport = () => {
+  const [data, setData] = useState<
+    | (Omit<CustomerTransactionHistory, "transactions"> & {
+        transactions: ReadTransaction[];
+      })
+    | null
+  >(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-
   const { acctNo, FbillCycle, TbillCycle } = useSelector(
     (state: RootState) => state.billing
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!acctNo || FbillCycle === undefined || TbillCycle === undefined) {
@@ -49,37 +54,22 @@ const TransactionHistoryReport = () => {
           TbillCycle: TbillCycle,
         };
 
-        const result = await postJSON(
-          "/CEBINFO_API_2025/api/OrdinaryCusTransaction",
-          payload
-        );
+        const result = await postJSON(Ordinary_Reading_History_API, payload);
+        console.log("API result:", result);
 
         const customer = result.customerMasDetail;
-        let transactions = (result.customerTransDetail || []).map(
-          (t: RawTransaction) => ({
-            billMonth: t.yrMnth || t.billCycle || "",
-            billCycle: t.billCycle,
-            yrMnth: t.yrMnth || "",
-            Days: t.days || "",
-            Units: t.units || "",
-            acctNumber: t.acctNumber || "",
-            transactionDate: t.transDate || "",
-            description: t.transType || "",
-            transactionAmount:
-              t.transAmt !== undefined && t.transAmt !== null
-                ? t.transAmt.toFixed(2) + (t.balDrCr ? " " + t.balDrCr : "")
-                : "",
-            balance:
-              t.balance !== undefined && t.balance !== null
-                ? t.balance.toFixed(2) + (t.balDrCr ? " " + t.balDrCr : "")
-                : "",
-          })
-        );
-
-        transactions = transactions.filter((t: Transaction) => {
-          const cycle = Number(t.billCycle);
-          return !isNaN(cycle) && cycle >= FbillCycle && cycle <= TbillCycle;
-        });
+        let transactions = (result.customerReadDetail || []).map((t: any) => ({
+          billCycle: t.billCycle || "",
+          year: t.year || "",
+          readDate: t.readDate || "",
+          readMet1: t.readMet1 || "",
+          readMet2: t.readMet2 || "",
+          readMet3: t.readMet3 || "",
+          days: t.days || "",
+          units: t.units || "",
+          kwh: t.kwh || "",
+        }));
+        console.log("Transactions:", transactions);
 
         setData({
           accountNumber: customer.acctNumber || "",
@@ -93,11 +83,8 @@ const TransactionHistoryReport = () => {
           met3: customer.met3 || "",
           province: customer.province || "",
           netType: customer.netType || "",
-          date: new Date().toLocaleString(), // <-- real-time date here
-          balance:
-            transactions.length > 0
-              ? transactions[transactions.length - 1].balance
-              : "",
+          date: new Date().toLocaleString(),
+          balance: "",
           transactions,
         });
       } catch (error: any) {
@@ -116,24 +103,26 @@ const TransactionHistoryReport = () => {
     if (!data) return;
     const csvRows = [
       [
+        "Bill Cycle",
         "Bill Month",
-        "Year & Month",
+        "Reading Date",
+        "Meter 1",
+        "Meter 2",
+        "Meter 3",
+        "Consumption",
         "Days",
-        "Units",
-        "Transaction Date",
-        "Description",
-        "Transaction Amount",
-        "Balance",
+        "Charge",
       ],
       ...data.transactions.map((t) => [
         t.billCycle,
-        t.yrMnth,
-        t.Days,
-        t.Units,
-        t.transactionDate,
-        t.description,
-        t.transactionAmount,
-        t.balance,
+        t.year,
+        t.readDate,
+        t.readMet1,
+        t.readMet2,
+        t.readMet3,
+        t.units,
+        t.days,
+        t.kwh,
       ]),
     ];
     const csvContent =
@@ -142,10 +131,7 @@ const TransactionHistoryReport = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `TransactionHistory_${data.accountNumber}.csv`
-    );
+    link.setAttribute("download", `ReadingHistory_${data.accountNumber}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -185,6 +171,7 @@ const TransactionHistoryReport = () => {
     <div
       className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow border border-gray-100"
       ref={printRef}
+      style={{ minWidth: 320, maxWidth: "80vw" }}
     >
       {/* Back Button */}
       <button
@@ -200,7 +187,7 @@ const TransactionHistoryReport = () => {
         <div className="flex items-center gap-2 mb-2 md:mb-0">
           <FaListOl className="w-5 h-5 text-gray-400" />
           <h2 className="text-lg md:text-xl font-semibold text-gray-800 tracking-tight">
-            Transaction History
+            Reading History
           </h2>
           <span className="ml-2 text-xs text-gray-500 font-normal">
             Account:{" "}
@@ -286,81 +273,25 @@ const TransactionHistoryReport = () => {
       </div>
 
       <h3 className="text-base font-semibold text-gray-700 mb-2 flex items-center gap-1">
-        <FaListOl className="text-gray-400 w-4 h-4" /> Transactions
+        <FaListOl className="text-gray-400 w-4 h-4" /> Reading Records
       </h3>
-      {data.transactions.length === 0 ? (
-        <p className="text-gray-500 text-xs">No transactions found.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-200 rounded shadow-sm overflow-hidden text-xs">
-            <thead className="bg-gray-100 sticky top-0 z-10">
-              <tr>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Bill Cycle
-                </th>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Year & Month
-                </th>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Days
-                </th>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Units
-                </th>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Transaction Date
-                </th>
-                <th className="px-3 py-2 border-b text-left font-medium text-gray-700">
-                  Description
-                </th>
-                <th className="px-3 py-2 border-b text-right font-medium text-gray-700">
-                  Transaction Amount
-                </th>
-                <th className="px-3 py-2 border-b text-right font-medium text-gray-700">
-                  Balance
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.transactions.map((t, idx) => (
-                <tr
-                  key={idx}
-                  className={
-                    idx % 2 === 0
-                      ? "bg-white hover:bg-gray-50 transition"
-                      : "bg-gray-50 hover:bg-gray-100 transition"
-                  }
-                >
-                  <td className="px-3 py-2 border-b text-gray-700">
-                    {t.billCycle}
-                  </td>
-                  <td className="px-3 py-2 border-b text-gray-700">
-                    {t.yrMnth}
-                  </td>
-                  <td className="px-3 py-2 border-b text-gray-700">{t.Days}</td>
-                  <td className="px-3 py-2 border-b text-gray-700">
-                    {t.Units}
-                  </td>
-                  <td className="px-3 py-2 border-b text-gray-700">
-                    {t.transactionDate}
-                  </td>
-                  <td className="px-3 py-2 border-b text-gray-700">
-                    {t.description}
-                  </td>
-                  <td className="px-3 py-2 border-b text-right text-gray-800 font-medium">
-                    {t.transactionAmount}
-                  </td>
-                  <td className="px-3 py-2 border-b text-right text-gray-800 font-medium">
-                    {t.balance}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <ReportTable
+        columns={[
+          { label: "Bill Cycle", accessor: "billCycle" },
+          { label: "Bill Month", accessor: "year" },
+          { label: "Reading Date", accessor: "readDate" },
+          { label: "Meter 1", accessor: "readMet1" },
+          { label: "Meter 2", accessor: "readMet2" },
+          { label: "Meter 3", accessor: "readMet3" },
+          { label: "Consumption", accessor: "units", align: "right" },
+          { label: "Days", accessor: "days", align: "right" },
+          { label: "Charge", accessor: "kwh", align: "right" },
+        ]}
+        data={data.transactions}
+        rowKey={(_, idx) => idx}
+      />
     </div>
   );
 };
 
-export default TransactionHistoryReport;
+export default ReadingHistoryReport;

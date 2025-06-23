@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/Store";
+import { RootState } from "../../../../../redux/Store";
+import { Bulk_Billing_Report_API } from "../../../../../services/BackendServices";
 import {
   FaArrowLeft,
   FaFileDownload,
@@ -14,35 +15,11 @@ import {
   FaBalanceScale,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-interface CustomerDetails {
-  acctNumber: string;
-  name: string;
-  address: string;
-  tariff: string;
-  wlkOdr: string;
-  province: string;
-  areaName: string;
-}
-
-interface BulkReportRow {
-  billCycle: string;
-  year: string;
-  transDate: string | null;
-  transType: string;
-  reading: string | null;
-  units: string | null;
-  rate: number | null;
-  amount: number | null;
-  monthlyChg: number | null;
-  payments: number | null;
-  debits: number | null;
-  credits: number | null;
-  dueAmount: number | null;
-  dueAmtDrCr?: string | null;
-  balance: number | null;
-  balanceDrCr: string | null;
-}
+import ReportTable from "../../../../shared/ReportTable";
+import type {
+  CustomerDetails,
+  BulkReportRow,
+} from "../../../../../interfaces/chartTypes";
 
 const BulkReporting = () => {
   const [rows, setRows] = useState<BulkReportRow[]>([]);
@@ -64,10 +41,9 @@ const BulkReporting = () => {
       setCustomer(null);
 
       try {
-        const endpoint = "/CEBINFO_API_2025/api/bulkBreakup5";
         const payload = { acctNo, FbillCycle, TbillCycle };
 
-        const response = await fetch(endpoint, {
+        const response = await fetch(Bulk_Billing_Report_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -297,133 +273,28 @@ const BulkReporting = () => {
       )}
 
       {/* Transaction Table */}
-      {rows.length > 0 ? (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <div className="min-w-full inline-block align-middle">
-            <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200 text-xs">
-                <thead className="bg-gray-100 sticky top-0 z-10">
-                  <tr>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Bill Month
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Year
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      TXN/Read Date
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Trans. Description
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Current Reading
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Total Units
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Rate
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Amount
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Monthly Charge
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Payment
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Debits
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Credits
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Amount Due
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Due Dr/Cr
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Balance
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                      Balance Dr/Cr
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {rows.map((row, idx) => (
-                    <tr
-                      key={idx}
-                      className={
-                        idx % 2 === 0
-                          ? "bg-white hover:bg-gray-50 transition"
-                          : "bg-gray-50 hover:bg-gray-100 transition"
-                      }
-                    >
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.billCycle)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.year)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.transDate)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.transType)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.reading)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-700">
-                        {displayCell(row.units)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.rate)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.amount)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.monthlyChg)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.payments)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.debits)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.credits)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.dueAmount)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.dueAmtDrCr)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.balance)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-gray-800 font-medium">
-                        {displayCell(row.balanceDrCr)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      ) : (
-        !loading && (
-          <div className="text-gray-600 text-xs sm:text-sm">No data found.</div>
-        )
-      )}
+      <ReportTable
+        columns={[
+          { label: "Bill Month", accessor: "billCycle" },
+          { label: "Year", accessor: "year" },
+          { label: "TXN/Read Date", accessor: "transDate" },
+          { label: "Trans. Description", accessor: "transType" },
+          { label: "Current Reading", accessor: "reading" },
+          { label: "Total Units", accessor: "units" },
+          { label: "Rate", accessor: "rate", align: "right" },
+          { label: "Amount", accessor: "amount", align: "right" },
+          { label: "Monthly Charge", accessor: "monthlyChg", align: "right" },
+          { label: "Payment", accessor: "payments", align: "right" },
+          { label: "Debits", accessor: "debits", align: "right" },
+          { label: "Credits", accessor: "credits", align: "right" },
+          { label: "Amount Due", accessor: "dueAmount", align: "right" },
+          { label: "Due Dr/Cr", accessor: "dueAmtDrCr" },
+          { label: "Balance", accessor: "balance", align: "right" },
+          { label: "Balance Dr/Cr", accessor: "balanceDrCr" },
+        ]}
+        data={rows}
+        rowKey={(_, idx) => idx}
+      />
     </div>
   );
 };

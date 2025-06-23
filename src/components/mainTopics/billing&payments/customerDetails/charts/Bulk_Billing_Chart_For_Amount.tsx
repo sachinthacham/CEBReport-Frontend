@@ -1,98 +1,42 @@
-import {
-  Area,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  AreaChart,
-  BarChart,
-} from "recharts";
-import { BsBoxArrowUpRight } from "react-icons/bs";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import CustomAreaChart from "../../../../shared/CustomAreaChart";
+import CustomBarChart from "../../../../shared/CustomBarChart";
+import type { BulkCustomerTransDetail } from "../../../../../interfaces/chartTypes";
 
 type Props = {
-  data: customerTransDetail[];
-};
-
-export type customerTransDetail = {
-  billCycle: string;
-  yrMnth: string;
-  days: string;
-  units: string;
-  metRead1: null | string;
-  metRead2: null | string;
-  metRead3: null | string;
-  transDate: string;
-  transAmt: number;
-  transDrCr: string;
-  transCode: null | string;
-  transType: string;
-  prvBalance: number;
-  balance: number;
-  balDrCr: string;
+  data: BulkCustomerTransDetail[];
 };
 
 const BillingChart2 = ({ data }: Props) => {
-  const filteredData = data?.filter((item) => item.transDrCr === "Cr");
-  const navigate = useNavigate();
   const [chartType, setChartType] = useState<"area" | "bar">("area");
-
-  const handleViewReport = () => {
-    navigate("/report/billing-payment/transaction-history");
-  };
 
   const renderChart = () => {
     if (chartType === "area") {
       return (
-        <AreaChart
-          data={filteredData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
-          <YAxis
-            domain={[0, "dataMax + 50"]}
-            tick={{ fontSize: 12, fill: "#333" }}
-          />
-          <Tooltip />
-          <Legend />
-          <Area
-            type="monotone"
-            dataKey="transAmt"
-            name="Amount"
-            stroke="#00bfae"
-            fill="#b7efc5"
-            fillOpacity={0.4}
-          />
-        </AreaChart>
+        <CustomAreaChart
+          data={data}
+          xAxisKey="year"
+          dataKey="amount"
+          name="Amount"
+          unit="Rs. "
+        />
       );
     } else {
       return (
-        <BarChart
-          data={filteredData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="yrMnth" tick={{ fontSize: 12, fill: "#333" }} />
-          <YAxis
-            domain={[0, "dataMax + 50"]}
-            tick={{ fontSize: 12, fill: "#333" }}
-          />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="transAmt" name="Amount" fill="#00bfae" />
-        </BarChart>
+        <CustomBarChart
+          data={data}
+          xAxisKey="year"
+          dataKey="amount"
+          name="Amount"
+          unit="Rs. "
+        />
       );
     }
   };
 
   return (
     data &&
-    filteredData.length > 0 && (
+    data.length > 0 && (
       <div className="w-full h-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col relative group">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -116,15 +60,15 @@ const BillingChart2 = ({ data }: Props) => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                   />
                 </svg>
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">
-                  Transaction
+                  Payment Analysis
                 </h3>
-                <p className="text-green-100 text-xs">Payment analysis</p>
+                <p className="text-green-100 text-xs">Yearly trends</p>
               </div>
             </div>
 
@@ -149,11 +93,7 @@ const BillingChart2 = ({ data }: Props) => {
 
         {/* Chart Container */}
         <div className="flex-1 p-3 min-h-0">
-          <div className="w-full h-full">
-            <ResponsiveContainer width="100%" height="100%">
-              {renderChart()}
-            </ResponsiveContainer>
-          </div>
+          <div className="w-full h-full">{renderChart()}</div>
         </div>
 
         {/* Data Insights Bar - After Chart */}
@@ -164,8 +104,8 @@ const BillingChart2 = ({ data }: Props) => {
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold text-green-600">
                   Rs.{" "}
-                  {filteredData
-                    .reduce((sum, item) => sum + (item.transAmt || 0), 0)
+                  {data
+                    .reduce((sum, item) => sum + (item.amount || 0), 0)
                     .toFixed(2)}
                 </span>
               </div>
@@ -174,10 +114,8 @@ const BillingChart2 = ({ data }: Props) => {
                 <span className="font-semibold text-blue-600">
                   Rs.{" "}
                   {(
-                    filteredData.reduce(
-                      (sum, item) => sum + (item.transAmt || 0),
-                      0
-                    ) / filteredData.length || 0
+                    data.reduce((sum, item) => sum + (item.amount || 0), 0) /
+                      data.length || 0
                   ).toFixed(2)}
                 </span>
               </div>
@@ -185,9 +123,7 @@ const BillingChart2 = ({ data }: Props) => {
                 <span className="text-gray-600">Max:</span>
                 <span className="font-semibold text-purple-600">
                   Rs.{" "}
-                  {Math.max(
-                    ...filteredData.map((item) => item.transAmt || 0)
-                  ).toFixed(2)}
+                  {Math.max(...data.map((item) => item.amount || 0)).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -200,16 +136,10 @@ const BillingChart2 = ({ data }: Props) => {
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-gray-600 text-xs">
-                {filteredData.length} records
+                {data.length} records
               </span>
             </div>
-            <button
-              onClick={handleViewReport}
-              className="px-4 py-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white text-xs font-medium rounded hover:from-green-700 hover:to-green-800 focus:ring-1 focus:ring-green-500/20 focus:outline-none transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow flex items-center gap-1 group"
-            >
-              <BsBoxArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              View Report
-            </button>
+            <div className="text-gray-500 text-xs">Yearly Analysis</div>
           </div>
         </div>
       </div>

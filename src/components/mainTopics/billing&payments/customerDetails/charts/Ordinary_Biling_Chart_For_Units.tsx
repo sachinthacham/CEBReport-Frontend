@@ -1,38 +1,31 @@
 import { useState } from "react";
 import { BsBoxArrowUpRight } from "react-icons/bs";
-import BarChartComponent from "./BarChart";
-import AreaChartComponent from "./AreaChart";
+import { MdBarChart } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import CustomAreaChart from "../../../../shared/CustomAreaChart";
+import CustomBarChart from "../../../../shared/CustomBarChart";
+import type { ReadDetails } from "../../../../../interfaces/chartTypes";
 
 type Props = {
-  data: customerTransDetail[];
-};
-
-export type customerTransDetail = {
-  billCycle: string;
-  year: string;
-  transDate: string | null;
-  transType: string;
-  reading: string | null;
-  units: string | null;
-  rate: number;
-  amount: number;
-  monthlyChg: number;
-  payments: number;
-  debits: number;
-  credits: number;
-  dueAmount: number;
-  dueAmtDrCr: null;
-  balance: string | null;
-  balanceDrCr: string | null;
+  data: ReadDetails[];
 };
 
 const BillingChart = ({ data }: Props) => {
   const navigate = useNavigate();
   const [chartType, setChartType] = useState<"bar" | "area">("bar");
 
+  // Calculate insights
+  const totalUnits = data.reduce(
+    (sum, item) => sum + (parseFloat(item.units) || 0),
+    0
+  );
+  const avgUnits = totalUnits / data.length || 0;
+  const maxUnits = Math.max(...data.map((item) => parseFloat(item.units) || 0));
+
   const handleViewReport = () => {
-    navigate("/report/billing-payment/bulk-report");
+    navigate("/report/billing-payment/reading-history", {
+      state: { openChart: "readingHistory" },
+    });
   };
 
   return (
@@ -50,25 +43,13 @@ const BillingChart = ({ data }: Props) => {
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-2">
               <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
+                <MdBarChart className="w-4 h-4 text-white" />
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">
-                  Transaction
+                  Reading History
                 </h3>
-                <p className="text-blue-100 text-xs">Bulk customer</p>
+                <p className="text-blue-100 text-xs">Billing cycle analysis</p>
               </div>
             </div>
 
@@ -95,9 +76,21 @@ const BillingChart = ({ data }: Props) => {
         <div className="flex-1 p-3 min-h-0">
           <div className="w-full h-full">
             {chartType === "bar" ? (
-              <BarChartComponent data={data} />
+              <CustomBarChart
+                data={data}
+                xAxisKey="billCycle"
+                dataKey="units"
+                name="Units"
+                unit="kWh"
+              />
             ) : (
-              <AreaChartComponent data={data} />
+              <CustomAreaChart
+                data={data}
+                xAxisKey="billCycle"
+                dataKey="units"
+                name="Units"
+                unit="kWh"
+              />
             )}
           </div>
         </div>
@@ -109,27 +102,19 @@ const BillingChart = ({ data }: Props) => {
               <div className="flex items-center gap-1">
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold text-blue-600">
-                  Rs.{" "}
-                  {data
-                    .reduce((sum, item) => sum + (item.amount || 0), 0)
-                    .toFixed(2)}
+                  {totalUnits.toFixed(1)} Units
                 </span>
               </div>
               <div className="flex items-center gap-1">
                 <span className="text-gray-600">Avg:</span>
                 <span className="font-semibold text-green-600">
-                  Rs.{" "}
-                  {(
-                    data.reduce((sum, item) => sum + (item.amount || 0), 0) /
-                      data.length || 0
-                  ).toFixed(2)}
+                  {avgUnits.toFixed(1)} kWh
                 </span>
               </div>
               <div className="flex items-center gap-1">
                 <span className="text-gray-600">Max:</span>
                 <span className="font-semibold text-purple-600">
-                  Rs.{" "}
-                  {Math.max(...data.map((item) => item.amount || 0)).toFixed(2)}
+                  {maxUnits.toFixed(1)} kWh
                 </span>
               </div>
             </div>

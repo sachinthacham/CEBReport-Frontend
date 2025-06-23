@@ -1,11 +1,11 @@
 import { useState } from "react";
 import BillingForm from "../../components/mainTopics/billing&payments/customerDetails/Billing_Form";
-import BillingChart from "../../components/mainTopics/billing&payments/customerDetails/Biling_Chart";
-import BillingChart2 from "../../components/mainTopics/billing&payments/customerDetails/Billing_Chart2";
-import BillingChart3 from "../../components/mainTopics/billing&payments/customerDetails/Billing_Chart3";
-import SpecialChart1 from "../../components/mainTopics/billing&payments/customerDetails/SpecialChart1";
-import SpecialChart2 from "../../components/mainTopics/billing&payments/customerDetails/SpecialChart2";
-import SpecialChart3 from "../../components/mainTopics/billing&payments/customerDetails/SpecialChart3";
+import Ordinary_Biling_Chart_For_Units from "../../components/mainTopics/billing&payments/customerDetails/charts/Ordinary_Biling_Chart_For_Units";
+import Ordinary_Billing_Chart_For_Amount from "../../components/mainTopics/billing&payments/customerDetails/charts/Ordinary_Billing_Chart_For_Amount";
+import Ordinary_Billing_Chart_For_Balance from "../../components/mainTopics/billing&payments/customerDetails/charts/Ordinary_Billing_Chart_For_Balance";
+import Bulk_Billing_Chart_For_Units from "../../components/mainTopics/billing&payments/customerDetails/charts/Bulk_Billing_Chart_For_Units";
+import Bulk_Billing_Chart_For_Amount from "../../components/mainTopics/billing&payments/customerDetails/charts/Bulk_Billing_Chart_For_Amount";
+import Bulk_Billing_Chart_For_Balance from "../../components/mainTopics/billing&payments/customerDetails/charts/Bulk_Billing_Chart_For_Balance";
 
 import {
   Customer,
@@ -63,25 +63,37 @@ const CustomerDetails = () => {
         {isSpecial && bulkCustomer ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-4">
             <div className="w-full h-[300px] sm:h-[400px]">
-              <SpecialChart1 data={bulkCustomer.customerTransDetail} />
+              <Bulk_Billing_Chart_For_Units
+                data={bulkCustomer.customerTransDetail}
+              />
             </div>
             <div className="w-full h-[300px] sm:h-[400px]">
-              <SpecialChart2 data={bulkCustomer.customerTransDetail} />
+              <Bulk_Billing_Chart_For_Amount
+                data={bulkCustomer.customerTransDetail}
+              />
             </div>
             <div className="w-full h-[300px] sm:h-[400px]">
-              <SpecialChart3 data={bulkCustomer.customerTransDetail} />
+              <Bulk_Billing_Chart_For_Balance
+                data={bulkCustomer.customerTransDetail}
+              />
             </div>
           </div>
         ) : customer && ord_cust_data ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-4">
             <div className="w-full h-[300px] sm:h-[400px]">
-              <BillingChart data={customer.customerReadDetail} />
+              <Ordinary_Biling_Chart_For_Units
+                data={customer.customerReadDetail}
+              />
             </div>
             <div className="w-full h-[300px] sm:h-[400px]">
-              <BillingChart2 data={ord_cust_data.customerTransDetail} />
+              <Ordinary_Billing_Chart_For_Amount
+                data={ord_cust_data.customerTransDetail}
+              />
             </div>
             <div className="w-full h-[300px] sm:h-[400px]">
-              <BillingChart3 data={ord_cust_data.customerTransDetail} />
+              <Ordinary_Billing_Chart_For_Balance
+                data={ord_cust_data.customerTransDetail}
+              />
             </div>
           </div>
         ) : null}

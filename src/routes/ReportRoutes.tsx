@@ -2,16 +2,16 @@ import { Route } from "react-router-dom";
 import Layout from "../Layout";
 import General from "../pages/General";
 import Analysis from "../pages/Analysis";
-import Collections from "../pages/Collections";
-import ConsumptionAnalysis from "../pages/ConsumptionAnalysis";
-import SolarInformation from "../pages/SolarInformation";
 import PucslLiss from "../pages/PucslLiss";
 import Inventory from "../pages/Inventory";
-import BillingPayment from "../pages/BillingPayment";
-import TransactionHistoryReport from "../components/mainTopics/billing&payments/customerDetails/TransactionHistoryReport";
-import OrdinaryReadingHistory from "../components/mainTopics/billing&payments/customerDetails/OrdinaryReadingHistory";
-import BulkReporting from "../components/mainTopics/billing&payments/customerDetails/BulkReporting";
+import Collections from "../pages/Collections";
 import TrialBalance from "../pages/TrialBalance";
+import BillingPayment from "../pages/BillingPayment";
+import SolarInformation from "../pages/SolarInformation";
+import ConsumptionAnalysis from "../pages/ConsumptionAnalysis";
+import BulkReporting from "../components/mainTopics/billing&payments/customerDetails/reports/BulkReporting";
+import OrdinaryReadingHistory from "../components/mainTopics/billing&payments/customerDetails/reports/OrdinaryReadingHistory";
+import TransactionHistoryReport from "../components/mainTopics/billing&payments/customerDetails/reports/TransactionHistoryReport";
 
 const ReportRoutes = () => (
   <>
@@ -87,7 +87,6 @@ const ReportRoutes = () => (
         </Layout>
       }
     />
-
     <Route
       path="/report/billing-payment/reading-history"
       element={
@@ -96,7 +95,6 @@ const ReportRoutes = () => (
         </Layout>
       }
     />
-
     <Route
       path="/report/billing-payment/bulk-report"
       element={
@@ -105,7 +103,6 @@ const ReportRoutes = () => (
         </Layout>
       }
     />
-
     <Route
       path="/report/trialBalance"
       element={
@@ -116,5 +113,4 @@ const ReportRoutes = () => (
     />
   </>
 );
-
 export default ReportRoutes;

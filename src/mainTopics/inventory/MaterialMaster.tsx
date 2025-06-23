@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaSyncAlt, FaEye } from "react-icons/fa";
-
-interface Material {
-  MatCd: string;
-  MatNm: string;
-}
-
-interface MaterialMasterProps {
-  title?: string;
-}
+import type {
+  Material,
+  MaterialMasterProps,
+} from "../../interfaces/materialTypes";
 
 const MaterialMaster: React.FC<MaterialMasterProps> = ({
   title = "Material Details",
