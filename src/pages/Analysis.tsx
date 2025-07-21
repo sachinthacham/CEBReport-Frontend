@@ -29,6 +29,7 @@ const Analysis = () => {
     }
   };
 
+  //add correct subtopic names which are in the src/data/SideBarData.ts file
   const renderSubtopicContent = (subtopicName: string) => {
     switch (subtopicName) {
       case "Age analysis":
